@@ -1,0 +1,7 @@
+# VS: solution files, build artifacts and IntelliCode precompiled header info (IPCH)
+.vs/*
+[Dd]ebug/*
+[Xx]64/*
+*.sln
+*.vcxproj
+*.vcxproj.*
