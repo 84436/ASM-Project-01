@@ -18,3 +18,13 @@
 	Output:
 		"không pad 0x0 / 0b0"
  */
+
+/*
+	main chứa intepretor:
+	argv[1] = input filepath, argv[2] = output filepath
+	cho exit(-1) nếu argc != 3 cho an toàn?
+*/
+int main(int argc, char** argv)
+{
+	return 0;
+}
