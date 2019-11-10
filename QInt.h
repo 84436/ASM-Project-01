@@ -16,22 +16,22 @@ class QInt
 
 	public:
 		QInt() {}
-		//QInt(uint8_t base, string data);	// từ số sẵn có
-		//QInt(const QInt& x);				// copy từ QInt sẵn có
-		//QInt& operator=(const QInt& x);	// copy từ QInt sẵn có
+		//QInt(uint8_t base, string data);  // từ số sẵn có
+		QInt(const QInt& x);                // copy từ QInt sẵn có
+		void operator=(const QInt& x);	    // copy từ QInt sẵn có
 
-		void randomize();					// test
+		void randomize();                   // test
 
 		//QInt operator+  (const QInt& x);
 		//QInt operator-  (const QInt& x);
 		//QInt operator*  (const QInt& x);
 		//QInt operator/  (const QInt& x);
-		//QInt operator&  (const QInt& x);
-		//QInt operator|  (const QInt& x);
-		//QInt operator^  (const QInt& x);
+		QInt operator&  (const QInt& x);
+		QInt operator|  (const QInt& x);
+		QInt operator^  (const QInt& x);
 		//QInt operator<< (const QInt& x);
 		//QInt operator>> (const QInt& x);
-		//QInt operator~  ();
+		QInt operator~  ();
 		//QInt rol        ();
 		//QInt ror        ();
 
