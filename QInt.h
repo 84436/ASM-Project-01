@@ -22,7 +22,7 @@ class QInt
 
 		void randomize();                   // test
 
-		//QInt operator+  (const QInt& x);
+		QInt operator+  (const QInt& x);
 		//QInt operator-  (const QInt& x);
 		//QInt operator*  (const QInt& x);
 		//QInt operator/  (const QInt& x);

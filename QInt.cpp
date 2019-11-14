@@ -17,6 +17,26 @@ void QInt::randomize()
 		data[i] = rd() % 2;
 }
 
+QInt QInt::operator+(const QInt& x)
+{
+	QInt r;
+	bool c = 0; // carry
+	for (int i = 0; i < QLEN; ++i)
+	{
+		if (!c)
+		{
+			if (this->data[i] && x.data[i]) { r.data[i] = 0; c = 1; }
+			else { r.data[i] = this->data[i] | x.data[i]; }
+		}
+		else
+		{
+			if (!this->data[i] && !x.data[i]) { r.data[i] = 1; c = 0; }
+			else { r.data[i] = this->data[i] & x.data[i]; }
+		}
+	}
+	return r;
+}
+
 QInt QInt::operator&(const QInt& x)
 {
 	QInt r = *this;
@@ -86,9 +106,9 @@ string QInt::toB2()
 	string r;
 	for (uint8_t i = 0; i < QLEN; i++)
 	{
-		r.push_back((data[i] ? '1' : '0'));
-		if ((i + 1) % 4 == 0)
-			r.push_back(' ');
+		r.insert(r.begin(), (data[i] ? '1' : '0'));
+		if ((i + 1) < QLEN && (i + 1) % 4 == 0)
+			r.insert(r.begin(), ' ');
 	}
 	return r;
 }
@@ -100,10 +120,10 @@ string QInt::toB16()
 	{
 		uint8_t t = 0;
 		for (uint8_t j : {0, 1, 2, 3})
-			t += data.test(i + j) << (3 - j);
-		r.push_back(HEX[t]);
-		if ((i - 12) % 16 == 0)
-			r.push_back(' ');
+			t += data.test(i + j) << j;
+		r.insert(r.begin(), HEX[t]);
+		if ((i + 4) < QLEN && (i + 4) % 16 == 0)
+			r.insert(r.begin(), ' ');
 	}
 	return r;
 }
