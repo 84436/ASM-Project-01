@@ -26,5 +26,11 @@
 */
 int main(int argc, char** argv)
 {
+	int c = 142857;
+	bitset<QLEN> _test(c);
+	QInt a(_test);
+	cout << "Bin: " << a.toB2() << endl;
+	QInt ans = a.rol(5);
+	cout << "Bin: " << ans.toB2() << endl;
 	return 0;
 }

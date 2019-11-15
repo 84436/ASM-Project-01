@@ -11,8 +11,8 @@
     -   [x] `operator|`
     -   [x] `operator^`
     -   [x] `operator~`
-    -   [ ] `operator<<` (LSL)
-    -   [ ] `operator>>` (ASR)
+    -   [x] `operator<<` (LSL)
+    -   [x] `operator>>` (ASR)
 -   [x] Ops (khác):
     -   [x] `operator=`
 -   [ ] Input/Nhập từ

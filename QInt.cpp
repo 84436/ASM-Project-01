@@ -1,4 +1,4 @@
-#include "QInt.h"
+﻿#include "QInt.h"
 
 QInt::QInt(const QInt& x)
 {
@@ -67,6 +67,11 @@ QInt QInt::operator^(const QInt& x)
 	return r;
 }
 
+QInt::QInt(const bitset<QLEN> p_value)
+{
+	this->data = p_value;
+}
+
 QInt QInt::operator~()
 {
 	QInt r = *this;
@@ -77,29 +82,48 @@ QInt QInt::operator~()
 	return r;
 }
 
-//QInt QInt::rol()
-//{
-//	QInt x = *this;
-//	bool MSB = x.data[0];
-//	for (uint8_t i = 1; i < QLEN; i++)
-//	{
-//		x.data[i - 1] = x.data[i];
-//	}
-//	x.data[QLEN - 1] = MSB;
-//	return x;
-//}
-//
-//QInt QInt::ror()
-//{
-//	QInt x = *this;
-//	bool LSB = x.data[QLEN - 1];
-//	for (int8_t i = QLEN - 2; i >= 0; i--)
-//	{
-//		x.data[i + 1] = x.data[i];
-//	}
-//	x.data[0] = LSB;
-//	return x;
-//}
+QInt QInt::operator>> (const int& v_shift)
+{
+	if (v_shift > QLEN || v_shift <= 0)
+		abort();
+	bitset<QLEN> re_value(this->data[QLEN - 1]);
+	int i = 0;
+	int k = v_shift;
+	while (k < QLEN)
+	{
+		re_value[i++] = this->data[k++];
+	}
+	return QInt(re_value);
+}
+
+QInt QInt::operator<<(const int& v_shift)
+{
+	if (v_shift > QLEN || v_shift <= 0)
+		abort();
+	bitset<QLEN> re_value(0);
+	int i = QLEN;
+	int k = QLEN - v_shift % QLEN - 1;
+	while (k >= 0)
+	{
+		re_value[--i] = this->data[k--];
+	}
+	return QInt(re_value);
+}
+
+//TODO : Làm chưa xong
+QInt QInt::rol(const int& n)
+{
+	if (n >= QLEN || n < 0)
+		abort();
+	return ((this->operator<< (n)) | (this->operator>> (-n & QLEN)));
+}
+
+QInt QInt::ror(const int& n)
+{
+	if (n >= QLEN || n < 0)
+		abort();
+	return ((this->operator>> (n)) | (this->operator<< (-n & QLEN)));
+}
 
 string QInt::toB2()
 {
