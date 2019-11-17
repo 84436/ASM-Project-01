@@ -115,14 +115,30 @@ QInt QInt::rol(const int& n)
 {
 	if (n >= QLEN || n < 0)
 		abort();
-	return ((this->operator<< (n)) | (this->operator>> (-n & QLEN)));
+	bitset<QLEN> ans;
+	int k = 2*QLEN - n%QLEN - 1;
+	int i = QLEN - 1;
+	while (i >= 0)
+	{
+		ans[i--] = this->data[(k) % QLEN];
+		k--;
+	}
+	return QInt(ans);
 }
 
 QInt QInt::ror(const int& n)
 {
 	if (n >= QLEN || n < 0)
 		abort();
-	return ((this->operator>> (n)) | (this->operator<< (-n & QLEN)));
+	bitset<QLEN> ans;
+	int k = n%QLEN;
+	int i = 0;
+	while (i < QLEN)
+	{
+		ans[i++] = this->data[(k) % QLEN];
+		k++;
+	}
+	return QInt(ans);
 }
 
 string QInt::toB2()

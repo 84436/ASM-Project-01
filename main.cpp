@@ -26,11 +26,17 @@
 */
 int main(int argc, char** argv)
 {
-	int c = 142857;
-	bitset<QLEN> _test(c);
+	bitset<QLEN> _test = {1};
+	int k = 0;
+	for (int i = 1; i < QLEN; i++)
+	{
+		k += i;
+		if (k % i == 0 || k % 3 != 0)
+			_test[i] = 1;
+	}
 	QInt a(_test);
 	cout << "Bin: " << a.toB2() << endl;
-	QInt ans = a.rol(5);
+	QInt ans = a.ror(5);
 	cout << "Bin: " << ans.toB2() << endl;
 	return 0;
 }
