@@ -26,7 +26,7 @@
 */
 int main(int argc, char** argv)
 {
-	bitset<QLEN> _test = {1};
+	/*bitset<QLEN> _test = {1};
 	int k = 0;
 	for (int i = 1; i < QLEN; i++)
 	{
@@ -37,6 +37,7 @@ int main(int argc, char** argv)
 	QInt a(_test);
 	cout << "Bin: " << a.toB2() << endl;
 	QInt ans = a.ror(5);
-	cout << "Bin: " << ans.toB2() << endl;
+	cout << "Bin: " << ans.toB2() << endl;*/
+
 	return 0;
 }
