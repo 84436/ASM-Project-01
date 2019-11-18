@@ -4,6 +4,10 @@
 #include <string>
 #include <bitset>
 #include <random>
+#include <math.h>
+#include <algorithm>
+#include <stack>
+#include "FFTMachine.h"
 using namespace std;
 
 constexpr auto QLEN = 128;
@@ -21,10 +25,10 @@ class QInt
 		void operator=(const QInt& x);	    // copy từ QInt sẵn có
 		QInt(const bitset<QLEN> p_value);
 		void randomize();                   // test
-
+		int bit_size() const;
 		QInt operator+  (const QInt& x);
 		//QInt operator-  (const QInt& x);
-		//QInt operator*  (const QInt& x);
+		QInt operator*  (const QInt& x);
 		//QInt operator/  (const QInt& x);
 		QInt operator&  (const QInt& x);
 		QInt operator|  (const QInt& x);
@@ -36,6 +40,6 @@ class QInt
 		QInt ror        (const int& n);
 
 		string toB2();
-		//string toB10();
+		string toB10();
 		string toB16();
 };

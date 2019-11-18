@@ -1,5 +1,7 @@
 ﻿#include "QInt.h"
-
+#include "FFTMachine.h"
+#include <sstream>
+#include "main.h"
 /*
 	Đề bài:
 	Định nghĩa lớp QInt, operator= và các ops khác để thao tác trên kiểu này.
@@ -26,7 +28,7 @@
 */
 int main(int argc, char** argv)
 {
-	bitset<QLEN> _test = {1};
+	/*bitset<QLEN> _test = {1};
 	int k = 0;
 	for (int i = 1; i < QLEN; i++)
 	{
@@ -35,8 +37,16 @@ int main(int argc, char** argv)
 			_test[i] = 1;
 	}
 	QInt a(_test);
-	cout << "Bin: " << a.toB2() << endl;
+	cout << "Bin: " << a.toB10() << endl;
 	QInt ans = a.ror(5);
+	cout << "Bin: " << ans.toB2() << endl;*/
+	bitset<QLEN> _test1(190);
+	bitset<QLEN> _test2(190);
+	QInt a(_test1);
+	QInt b(_test2);
+	cout << "Bin: " << a.toB2() << endl;
+	cout << "Bin: " << b.toB2() << endl;
+	QInt ans = a * b;
 	cout << "Bin: " << ans.toB2() << endl;
 	return 0;
 }
