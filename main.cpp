@@ -40,5 +40,12 @@ int main(int argc, char** argv)
 	cout << "Bin: " << a.toB10() << endl;
 	QInt ans = a.ror(5);
 	cout << "Bin: " << ans.toB2() << endl;*/
+
+	QInt a("4647");
+	QInt b("4302371896916613314517792614108589");
+	cout << "Bin: " << a.toB2() << endl;
+	cout << "Bin: " << b.toB2() << endl;
+	QInt ans = a * b;
+	cout << "Bin: " << ans.toB2() << endl;
 	return 0;
 }

@@ -22,13 +22,14 @@ class QInt
 		static uint8_t** Pow2Table;
 		void Pow2Table_Generate();
 		static bool Pow2Table_Generate_ran;
-
+		
 	public:
 		QInt() { Pow2Table_Generate(); }
 		QInt(uint8_t base, string data);	// từ số sẵn có
 		QInt(const QInt& x);                // copy từ QInt sẵn có
 		void operator=(const QInt& x);	    // copy từ QInt sẵn có
 		QInt(const bitset<QLEN> p_value);
+		QInt( string str, int base = 10);  //convert baseX -> QInt: Tạm thời là base10
 		void randomize();                   // test
 		int bit_size() const;
 		QInt operator+  (const QInt& x);
@@ -44,6 +45,7 @@ class QInt
 		QInt rol        (const int& n);
 		QInt ror        (const int& n);
 
+		
 		string toB2();
 		string toB10();
 		string toB16();

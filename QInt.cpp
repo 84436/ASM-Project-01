@@ -99,18 +99,13 @@ QInt QInt::operator+(const QInt& x)
 //TODO: DANG TRONG QUA TRINH TEST : CAN BASE10 NEN MOI UP LEN
 QInt QInt::operator*(const QInt& x)
 {
-	/*int muler_len = this->bit_size();
-	int muland_len = x.bit_size();
-	int N = 1;
-	for (int i = 1; i < (muler_len + muland_len); i *= 2) {
-		N *= 2;
-	}*/
-	string numStr1 = "9";
-	string numStr2 = "190";
-	int lenStr1, lenStr2, sumN;
+	string numStr1 = this->toB10();
+	QInt _tmp(x);
+	string numStr2 = _tmp.toB10();
+	int lenStr1, lenStr2;
 	lenStr1 = numStr1.size();
 	lenStr2 = numStr2.size();
-	sumN = lenStr1 + lenStr2;
+	int sumN = lenStr1 + lenStr2;
 	int N = 1;
 	for (int i = 1; i < sumN; i *= 2) {
 		N *= 2;
@@ -155,14 +150,13 @@ QInt QInt::operator*(const QInt& x)
 	}
 	string res;
 	rststream >> res;
-	cout << "$# " << res << endl;
 	/*bitset<QLEN> result;
 	for (int i = 0; i < QLEN - 1; i++)
 		result[i] = rst[QLEN - i - 1];*/
 	delete[] ans;
 	delete[] multiplier;
 	delete[] multiplicand;
-	return QInt();
+	return QInt(res);
 }
 
 QInt QInt::operator&(const QInt& x)
@@ -198,6 +192,49 @@ QInt QInt::operator^(const QInt& x)
 QInt::QInt(const bitset<QLEN> p_value)
 {
 	this->data = p_value;
+}
+
+bool isOdd(string s)
+{
+	if ((s[s.size() - 1] - '0') % 2 == 1)
+		return true;
+	return false;
+}
+string divByTwo(string num)
+{
+	string ans;
+	if (num == "1" || num == "0")
+		return "0";
+	int idx = 0;
+	int temp = num[idx] - '0';
+	while (temp < 2)
+		temp = temp * 10 + (num[++idx] - '0');
+	while (num.size() > idx)
+	{
+		// Store result in answer i.e. temp / divisor 
+		ans += (temp / 2) + '0';
+
+		// Take next digit of number 
+		temp = (temp % 2) * 10 + num[++idx] - '0';
+	}
+	// If divisor is greater than number 
+	if (ans.size() == 0)
+		return "0";
+
+	// else return ans 
+	return ans;
+}
+QInt::QInt(string num, int base)
+{
+	vector<bool> recase;
+	while (num != "0")
+	{
+		recase.push_back(isOdd(num));
+		num = divByTwo(num);
+	}
+	int k = 0;
+	for (int i = recase.size() - 1; i >= 0; i--)
+		this->data[k++] = recase[i];
 }
 
 QInt QInt::operator~()
