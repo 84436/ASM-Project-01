@@ -11,6 +11,7 @@
 using namespace std;
 
 constexpr auto QLEN = 128;
+constexpr auto DLEN = 39;
 constexpr char HEX[] = "0123456789ABCDEF";
 
 class QInt
@@ -18,9 +19,13 @@ class QInt
 	private:
 		bitset<QLEN> data;
 
+		static uint8_t** Pow2Table;
+		void Pow2Table_Generate();
+		static bool Pow2Table_Generate_ran;
+
 	public:
-		QInt() {}
-		//QInt(uint8_t base, string data);  // từ số sẵn có
+		QInt() { Pow2Table_Generate(); }
+		QInt(uint8_t base, string data);	// từ số sẵn có
 		QInt(const QInt& x);                // copy từ QInt sẵn có
 		void operator=(const QInt& x);	    // copy từ QInt sẵn có
 		QInt(const bitset<QLEN> p_value);

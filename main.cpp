@@ -40,13 +40,5 @@ int main(int argc, char** argv)
 	cout << "Bin: " << a.toB10() << endl;
 	QInt ans = a.ror(5);
 	cout << "Bin: " << ans.toB2() << endl;*/
-	bitset<QLEN> _test1(190);
-	bitset<QLEN> _test2(190);
-	QInt a(_test1);
-	QInt b(_test2);
-	cout << "Bin: " << a.toB2() << endl;
-	cout << "Bin: " << b.toB2() << endl;
-	QInt ans = a * b;
-	cout << "Bin: " << ans.toB2() << endl;
 	return 0;
 }

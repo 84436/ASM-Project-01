@@ -2,11 +2,11 @@
     -   [x] Ctor mặc định, gán, chép
     -   [x] Ctor random (test)
 -   [ ] Ops (số học):
-    -   [ ] `operator+`
+    -   [x] `operator+`
     -   [ ] `operator-`
     -   [ ] `operator*`
     -   [ ] `operator/`
--   [ ] Ops (bitwise):
+-   [x] Ops (bitwise):
     -   [x] `operator&`
     -   [x] `operator|`
     -   [x] `operator^`
@@ -16,11 +16,11 @@
 -   [x] Ops (khác):
     -   [x] `operator=`
 -   [ ] Input/Nhập từ
-    -   [ ] Base-2
-    -   [ ] Base-10
-    -   [ ] Base-16
--   [ ] Output/Xuất ra
     -   [x] Base-2
     -   [ ] Base-10
+    -   [ ] Base-16
+-   [x] Output/Xuất ra
+    -   [x] Base-2
+    -   [x] Base-10
     -   [x] Base-16
 -   [ ] Sử dụng output chuẩn thay vì stream `cout`
