@@ -54,6 +54,11 @@ QInt::QInt(const QInt& x) : QInt()
 	this->data = x.data;
 }
 
+QInt::QInt(const bitset<QLEN> p_value)
+{
+	this->data = p_value;
+}
+
 void QInt::operator=(const QInt& x)
 {
 	this->data = x.data;
@@ -94,6 +99,11 @@ QInt QInt::operator+(const QInt& x)
 		}
 	}
 	return r;
+}
+
+QInt QInt::operator-(const QInt& x)
+{
+	return ~x + QInt(2, "1");
 }
 
 //TODO : Can check nhe lai
@@ -142,11 +152,6 @@ QInt QInt::operator^(const QInt& x)
 		r.data[i] = this->data[i] ^ x.data[i];
 	}
 	return r;
-}
-
-QInt::QInt(const bitset<QLEN> p_value)
-{
-	this->data = p_value;
 }
 
 bool isOdd(string s)
@@ -207,7 +212,7 @@ QInt::QInt(string num, int base)
 	}
 }
 
-QInt QInt::operator~()
+QInt QInt::operator~() const
 {
 	QInt r = *this;
 	for (uint8_t i = 0; i < QLEN; i++)
@@ -347,15 +352,6 @@ string QInt::toB10()
 		r.insert(r.begin(), '-');
 
 	return r;
-}
-bool is_holding(vector<uint64_t> q)
-{
-	for (auto i : q)
-	{
-		if (i != 0)
-			return true;
-	}
-	return false;
 }
 
 string QInt::toB16()

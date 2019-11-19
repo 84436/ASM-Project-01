@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <bitset>
 #include <random>
@@ -33,7 +34,7 @@ class QInt
 		void randomize();                   // test
 		int bit_size() const;
 		QInt operator+  (const QInt& x);
-		//QInt operator-  (const QInt& x);
+		QInt operator-  (const QInt& x);
 		QInt operator*  (const QInt& x);
 		//QInt operator/  (const QInt& x);
 		QInt operator&  (const QInt& x);
@@ -41,7 +42,7 @@ class QInt
 		QInt operator^  (const QInt& x);
 		QInt operator<< (const int& x);
 		QInt operator>> (const int& x);
-		QInt operator~  ();
+		QInt operator~  () const;
 		QInt rol        (const int& n);
 		QInt ror        (const int& n);
 

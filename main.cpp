@@ -21,13 +21,51 @@
 		"không pad 0x0 / 0b0"
  */
 
-/*
-	main chứa intepretor:
-	argv[1] = input filepath, argv[2] = output filepath
-	cho exit(-1) nếu argc != 3 cho an toàn?
-*/
+// Tokenizer trong đây chỉ cần biết ' ' là đủ ._.
+vector<string> tokenizer(string s)
+{
+	vector<string> tokens;
+	size_t offset = 0;
+	while (offset < s.size())
+	{
+		size_t spacechar = (
+			s.find_first_of(' ', offset) != string::npos
+			? s.find_first_of(' ', offset)
+			: s.size()
+		);
+		tokens.push_back(
+			s.substr(offset, spacechar - offset)
+		);
+		offset = ++spacechar;
+	}
+	return tokens;
+}
+
 int main(int argc, char** argv)
 {
+	if (argc != 3)
+	{
+		cout << "Incorrect number of arguments." << endl;
+		return -1;
+	}
+
+	fstream fi(argv[1], fstream::in);
+	fstream fo(argv[2], fstream::out | fstream::trunc);
+
+	// Phòng trường hợp...
+	if (!fi.is_open() || !fo.is_open())
+	{
+		cout << "Failed to open file." << endl;
+		return -1;
+	}
+
+	while (!fi.eof())
+	{
+		string command;
+		getline(fi, command);
+		vector<string> args = tokenizer(command);
+	}
+
 	/*bitset<QLEN> _test = {1};
 	int k = 0;
 	for (int i = 1; i < QLEN; i++)
