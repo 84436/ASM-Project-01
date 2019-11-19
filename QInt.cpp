@@ -368,7 +368,7 @@ string QInt::toB16()
 	{
 		uint8_t t = 0;
 		for (uint8_t j : {0, 1, 2, 3})
-			t += data.test(i + j) << j;
+			t += data.test((size_t)i + j) << j;
 		r.insert(r.begin(), HEX[t]);
 		/*if ((i + 4) < QLEN && (i + 4) % 16 == 0)
 			r.insert(r.begin(), ' ');*/
