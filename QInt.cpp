@@ -3,7 +3,8 @@
 
 uint8_t** QInt::Pow2Table = nullptr;
 bool QInt::Pow2Table_Generate_ran = false;
-
+bool isOdd(string s);
+string divByTwo(string num);
 void QInt::Pow2Table_Generate()
 {
 	if (Pow2Table_Generate_ran)
@@ -95,68 +96,22 @@ QInt QInt::operator+(const QInt& x)
 	return r;
 }
 
+//TODO : Can check nhe lai
 
-//TODO: DANG TRONG QUA TRINH TEST : CAN BASE10 NEN MOI UP LEN
 QInt QInt::operator*(const QInt& x)
 {
-	string numStr1 = this->toB10();
+	QInt ans("0");
 	QInt _tmp(x);
-	string numStr2 = _tmp.toB10();
-	int lenStr1, lenStr2;
-	lenStr1 = numStr1.size();
-	lenStr2 = numStr2.size();
-	int sumN = lenStr1 + lenStr2;
-	int N = 1;
-	for (int i = 1; i < sumN; i *= 2) {
-		N *= 2;
-	}
-	Complex* multiplier = new Complex[N];
-	Complex* multiplicand = new Complex[N];
-	Complex* ans = new Complex[N];
-
-	for (int i = lenStr1 -1; i >= 0; i--) {
-		//multiplier[muler_len - i - 1] = Complex((double)(this->data[i]));
-		multiplier[lenStr1 - i - 1] = Complex((double)(numStr1[i] - '0'));
-	}
-	for (int i = lenStr2 - 1;i >= 0;i--){
-		//multiplicand[muland_len  - i - 1] = Complex((double)(x.data[i]));
-		multiplicand[lenStr2  - i - 1] = Complex((double)(numStr2[i] - '0'));
-	}
-
-	fft(multiplier, multiplier, N);
-	fft(multiplicand, multiplicand, N);
-
-	for (int i = 0; i < N; i++) {
-		ans[i] = (multiplier[i] * multiplicand[i]);
-	}
-	ifft(ans, ans, N);
-	vector<int> rst;
-	int curr, roundup = 0;
-	for (int i = 0; i < sumN; i++) {
-		curr = (int)ans[i] + roundup;
-		rst.push_back(curr % 10);
-		roundup = curr / 10;
-	}
-
-	vector<int>::reverse_iterator rit = rst.rbegin();
-	while ((*rit) == 0) {
-		rst.pop_back();
-		rit = rst.rbegin();
-	}
-
-	stringstream rststream;
-	for (; rit != rst.rend(); rit++) {
-		rststream << *rit;//+'0';
-	}
-	string res;
-	rststream >> res;
-	/*bitset<QLEN> result;
-	for (int i = 0; i < QLEN - 1; i++)
-		result[i] = rst[QLEN - i - 1];*/
-	delete[] ans;
-	delete[] multiplier;
-	delete[] multiplicand;
-	return QInt(res);
+	int count = 0;
+	string multicand = _tmp.toB10();
+	while (multicand != "0")
+	{
+			if (isOdd(multicand))
+				ans = ans + (*this << count);
+			count++;
+			multicand = divByTwo(multicand);
+		}
+	return ans;
 }
 
 QInt QInt::operator&(const QInt& x)
@@ -226,6 +181,12 @@ string divByTwo(string num)
 }
 QInt::QInt(string num, int base)
 {
+	bool isNeg = false;
+	if (num[0] == '-')
+	{
+		isNeg = true;
+		num = num.substr(1);
+	}
 	vector<bool> recase;
 	while (num != "0")
 	{
@@ -233,8 +194,17 @@ QInt::QInt(string num, int base)
 		num = divByTwo(num);
 	}
 	int k = 0;
-	for (int i = recase.size() - 1; i >= 0; i--)
-		this->data[k++] = recase[i];
+	for (auto i : recase)
+	{
+		if (k >= QLEN)
+			break;
+		this->data[k++] = i;
+	}
+	if (isNeg)
+	{
+		bitset<QLEN> one(1);
+		*this = (~*(this) + QInt(one));
+	}
 }
 
 QInt QInt::operator~()

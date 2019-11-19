@@ -41,11 +41,15 @@ int main(int argc, char** argv)
 	QInt ans = a.ror(5);
 	cout << "Bin: " << ans.toB2() << endl;*/
 
-	QInt a("4647");
-	QInt b("4302371896916613314517792614108589");
+	QInt a("222222222222222222222233");
+	QInt b("100");
 	cout << "Bin: " << a.toB2() << endl;
+	cout << "Dec: " << a.toB10() << endl;
+	
 	cout << "Bin: " << b.toB2() << endl;
+	cout << "Dec: " << b.toB10() << endl;
 	QInt ans = a * b;
 	cout << "Bin: " << ans.toB2() << endl;
+	cout << "Dec: " << ans.toB10() << endl;
 	return 0;
 }
