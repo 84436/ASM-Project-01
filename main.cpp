@@ -1,7 +1,4 @@
 ﻿#include "QInt.h"
-#include "FFTMachine.h"
-#include <sstream>
-#include "main.h"
 /*
 	Đề bài:
 	Định nghĩa lớp QInt, operator= và các ops khác để thao tác trên kiểu này.

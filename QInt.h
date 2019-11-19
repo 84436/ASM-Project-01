@@ -7,7 +7,6 @@
 #include <math.h>
 #include <algorithm>
 #include <stack>
-#include "FFTMachine.h"
 using namespace std;
 
 constexpr auto QLEN = 128;
