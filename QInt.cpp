@@ -110,10 +110,14 @@ QInt QInt::operator-(const QInt& x)
 
 QInt QInt::operator*(const QInt& x)
 {
+
 	QInt ans("0");
 	QInt _tmp(x);
 	int count = 0;
+	bool isNeg = (x.data[1] == 1);
 	string multicand = _tmp.toB10();
+	if (multicand[0] == '-')
+		multicand = multicand.substr(1);
 	while (multicand != "0")
 	{
 			if (isOdd(multicand))
@@ -121,6 +125,8 @@ QInt QInt::operator*(const QInt& x)
 			count++;
 			multicand = divByTwo(multicand);
 		}
+	if (isNeg)
+		ans = (~ans + QInt("1"));
 	return ans;
 }
 
@@ -238,7 +244,7 @@ QInt QInt::operator>> (const int& v_shift)
 
 QInt QInt::operator<<(const int& v_shift)
 {
-	if (v_shift > QLEN || v_shift <= 0)
+	if (v_shift > QLEN || v_shift < 0)
 		abort();
 	bitset<QLEN> re_value(0);
 	int i = QLEN;
