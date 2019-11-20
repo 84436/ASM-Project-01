@@ -156,28 +156,5 @@ int main(int argc, char** argv)
 			cout << "Bad command: " << command << endl;
 	}
 
-	/*bitset<QLEN> _test = {1};
-	int k = 0;
-	for (int i = 1; i < QLEN; i++)
-	{
-		k += i;
-		if (k % i == 0 || k % 3 != 0)
-			_test[i] = 1;
-	}
-	QInt a(_test);
-	cout << "Bin: " << a.toB10() << endl;
-	QInt ans = a.ror(5);
-	cout << "Bin: " << ans.toB2() << endl;*/
-
-	QInt a("4647");
-	QInt b("4302371896916613314517792614108589");
-	cout << "Bin: " << a.toB2() << endl;
-	cout << "Dec: " << a.toB10() << endl;
-	
-	cout << "Bin: " << b.toB2() << endl;
-	cout << "Dec: " << b.toB10() << endl;
-	QInt ans = a * b;
-	cout << "Bin: " << ans.toB2() << endl;
-	cout << "Dec: " << ans.toB10() << endl;
 	return 0;
 }

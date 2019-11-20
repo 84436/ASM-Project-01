@@ -33,19 +33,58 @@ void QInt::Pow2Table_Generate()
 
 QInt::QInt(uint8_t base, string data) : QInt()
 {
+	if (data.empty())
+	{
+		cout << "Bad string." << endl;
+		return;
+	}
+
 	switch (base)
 	{
 		case 2:
+			if (data.size() > 128)
+			{
+				cout << "Bad binary string length." << endl;
+				return;
+			}
+
 			this->data = bitset<QLEN>(data);
 			break;
 
 		/*case 10:
 			break;*/
 
-		/*case 16:
-			break;*/
+		case 16:
+			if (data.size() > 32)
+			{
+				cout << "Bad hexadecimal string length." << endl;
+				return;
+			}
 
-		default: break;
+			while (data.size() < 32)
+			{
+				data.insert(data.begin(), '0');
+			}
+
+			// data.size() --> uint64_t
+			for (int64_t c = data.size() - 1; c > 0; --c)
+			{
+				// Index trong HEX = số ở dạng b10
+				uint8_t dec = 0;
+				for (uint8_t i = 0; i < 16; i++)
+					if (data[c] == HEX[i]) { dec = i; break; }
+				
+				for (uint8_t b : {0, 1, 2, 3})
+				{
+					this->data[QLEN - 4 * (c + 1) + b] = (bool)(dec % 2);
+					dec /= 2;
+				}
+			}
+			break;
+
+		default:
+			cout << "Bad base." << endl;
+			break;
 	}
 }
 
@@ -103,11 +142,10 @@ QInt QInt::operator+(const QInt& x)
 
 QInt QInt::operator-(const QInt& x)
 {
-	return ~x + QInt(2, "1");
+	return (*this) + (~x + QInt(2, "1"));
 }
 
 //TODO : Can check nhe lai
-
 QInt QInt::operator*(const QInt& x)
 {
 
