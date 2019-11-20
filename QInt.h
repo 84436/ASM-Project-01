@@ -5,13 +5,13 @@
 #include <string>
 #include <bitset>
 #include <random>
-#include <math.h>
+#include <cmath>
 #include <algorithm>
 #include <stack>
 using namespace std;
 
-constexpr auto QLEN = 128;
-constexpr auto DLEN = 39;
+constexpr auto QLEN = 128;					// độ dài QInt = 128 bit ._.
+constexpr auto DLEN = 39;					// ceil(log10(2^128))
 constexpr char HEX[] = "0123456789ABCDEF";
 
 class QInt
@@ -20,31 +20,32 @@ class QInt
 		bitset<QLEN> data;
 
 		static uint8_t** Pow2Table;
-		void Pow2Table_Generate();
 		static bool Pow2Table_Generate_ran;
+		void Pow2Table_Generate();			// tính 2^k, k=0..127
 		
 	public:
 		QInt() { Pow2Table_Generate(); }
-		QInt(uint8_t base, string data);	// từ số sẵn có
-		QInt(const QInt& x);                // copy từ QInt sẵn có
-		void operator=(const QInt& x);	    // copy từ QInt sẵn có
-		QInt(const bitset<QLEN> p_value);
-		QInt( string str, int base = 10);  //convert baseX -> QInt: Tạm thời là base10
-		void randomize();                   // test
-		int bit_size() const;
+		// TODO: nhập 2 cái dưới lại
+		QInt(uint8_t base, string data);	// từ string base2/base16
+		QInt(string str, int base = 10);	// từ string base10
+		QInt(const bitset<QLEN> p_value);	// từ bitset
+		QInt(const QInt& x);                // copy
+		void randomize();					// random; chỉ dùng để test
+		void operator=(const QInt& x);	    // copy
+
 		QInt operator+  (const QInt& x);
 		QInt operator-  (const QInt& x);
 		QInt operator*  (const QInt& x);
 		//QInt operator/  (const QInt& x);
+
 		QInt operator&  (const QInt& x);
 		QInt operator|  (const QInt& x);
 		QInt operator^  (const QInt& x);
-		QInt operator<< (const int& x);
-		QInt operator>> (const int& x);
 		QInt operator~  () const;
-		QInt rol        (const int& n);
-		QInt ror        (const int& n);
-
+		QInt operator<< (const int8_t& x);
+		QInt operator>> (const int8_t& x);
+		QInt rol		() const;
+		QInt ror		() const;
 		
 		string toB2();
 		string toB10();
