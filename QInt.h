@@ -36,25 +36,19 @@ class QInt
 		QInt operator+  (const QInt& x);
 		QInt operator-  (const QInt& x);
 		QInt operator*  (const QInt& x);
-<<<<<<< HEAD
 		QInt operator/  (const QInt& x);
-=======
 		//QInt operator/  (const QInt& x);
 
->>>>>>> origin
 		QInt operator&  (const QInt& x);
 		QInt operator|  (const QInt& x);
 		QInt operator^  (const QInt& x);
 		QInt operator~  () const;
-<<<<<<< HEAD
 		QInt rol        (const int& n);
 		QInt ror        (const int& n);
-=======
 		QInt operator<< (const int8_t& x);
 		QInt operator>> (const int8_t& x);
 		QInt rol		() const;
 		QInt ror		() const;
->>>>>>> origin
 		
 
 		friend QInt q_abs(QInt x);

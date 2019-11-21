@@ -222,7 +222,6 @@ QInt QInt::operator*(const QInt& x)
 	return ans;
 }
 
-<<<<<<< HEAD
 QInt QInt::operator/(const QInt& x)
 {
 	QInt dvd = q_abs(*this), dvs = q_abs(x), ans = QInt("0");
@@ -248,9 +247,7 @@ QInt QInt::operator/(const QInt& x)
 	/*cout << "$ " << ans.toB10() << endl;*/
 	return ans;
 }
-=======
-//////////////////////////////////////////////////
->>>>>>> origin
+
 
 QInt QInt::operator&(const QInt& x)
 {
@@ -264,7 +261,6 @@ QInt QInt::operator|(const QInt& x)
 
 QInt QInt::operator^(const QInt& x)
 {
-<<<<<<< HEAD
 	QInt r = *this;
 	for (uint8_t i = 0; i < QLEN; i++)
 	{
@@ -323,9 +319,6 @@ QInt::QInt(string num, int base)
 		bitset<QLEN> one(1);
 		*this = (~*(this) + QInt(one));
 	}
-=======
-	return QInt(data ^ x.data);
->>>>>>> origin
 }
 
 QInt QInt::operator~() const
@@ -342,12 +335,8 @@ QInt QInt::operator>>(const int8_t& x)
 {
 	return QInt(this->data >> x);
 }
-<<<<<<< HEAD
-QInt QInt::rol(const int& n)
-=======
 
 QInt QInt::rol() const
->>>>>>> origin
 {
 	// Safe mode
 	QInt r(this->data << 1);
@@ -363,7 +352,6 @@ QInt QInt::ror() const
 	return r;
 }
 
-//////////////////////////////////////////////////
 
 string QInt::toB2()
 {
