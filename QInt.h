@@ -27,7 +27,6 @@ class QInt
 		QInt() { Pow2Table_Generate(); }
 		// TODO: nhập 2 cái dưới lại
 		QInt(uint8_t base, string data);	// từ string base2/base16
-		QInt(string str, int base = 10);	// từ string base10
 		QInt(const bitset<QLEN> p_value);	// từ bitset
 		QInt(const QInt& x);                // copy
 		void randomize();					// random; chỉ dùng để test
@@ -37,26 +36,23 @@ class QInt
 		QInt operator-  (const QInt& x);
 		QInt operator*  (const QInt& x);
 		QInt operator/  (const QInt& x);
-		//QInt operator/  (const QInt& x);
+		
+		friend QInt q_abs(QInt x);
+		friend inline int compare(QInt& lhs, QInt& rhs);
+		friend inline bool operator==(const QInt& lhs, const QInt& rhs);
 
 		QInt operator&  (const QInt& x);
 		QInt operator|  (const QInt& x);
 		QInt operator^  (const QInt& x);
 		QInt operator~  () const;
-		QInt rol        (const int& n);
-		QInt ror        (const int& n);
 		QInt operator<< (const int8_t& x);
 		QInt operator>> (const int8_t& x);
 		QInt rol		() const;
 		QInt ror		() const;
 		
-
-		friend QInt q_abs(QInt x);
-
-		friend inline int compare( QInt& lhs,  QInt& rhs);
-		friend inline bool operator==(const QInt& lhs, const QInt& rhs);
-
-		string toB2();
+		/*string toB2();
 		string toB10();
-		string toB16();
+		string toB16();*/
+
+		string toString(uint8_t base);
 };

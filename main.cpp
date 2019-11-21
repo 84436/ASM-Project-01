@@ -1,4 +1,6 @@
-﻿#include "QInt.h"
+﻿#define _CRT_SECURE_NO_WARNINGS
+
+#include "QInt.h"
 /*
 	Đề bài:
 	Định nghĩa lớp QInt, operator= và các ops khác để thao tác trên kiểu này.
@@ -32,7 +34,7 @@ const int8_t findOp(string o)
 	const vector<string> valid_ops = {
 		"2", "10", "16",
 		"~", "rol", "ror",
-		"&", "|", "^", "<<", ">>"
+		"&", "|", "^", "<<", ">>",
 		"+", "-", "*", "/"
 	};
 
@@ -73,7 +75,8 @@ int main(int argc, char** argv)
 	}
 
 	fstream fi(argv[1], fstream::in);
-	fstream fo(argv[2], fstream::out | fstream::trunc);
+	fstream fo(argv[2], fstream::out | fstream::trunc);	
+	// freopen(argv[2], "w", stdout);
 
 	// Phòng trường hợp...
 	if (!fi.is_open() || !fo.is_open())
@@ -87,64 +90,85 @@ int main(int argc, char** argv)
 		// Đọc và tách command
 		string command;
 		getline(fi, command);
-		vector<string> args = tokenizer(command);
+		if (command.empty() || command.find_first_not_of(' ') == string::npos)
+			continue;
+
+		vector<string> tokens = tokenizer(command);
 		
-		if (args.size() == 3)
+		if (tokens.size() == 3)
 		{
-			switch (stoi(args[1]))
+			cout << tokens[1] << endl;
+			switch (findOp(tokens[1]))
 			{
 				case VALID_OPS::TO_BASE2:
+					fo << QInt(stoi(tokens[0]), tokens[2]).toString(2) << endl;
 					break;
 
 				case VALID_OPS::TO_BASE10:
+					fo << QInt(stoi(tokens[0]), tokens[2]).toString(10) << endl;
 					break;
 
 				case VALID_OPS::TO_BASE16:
+					fo << QInt(stoi(tokens[0]), tokens[2]).toString(16) << endl;
 					break;
 
 				case VALID_OPS::NOT:
+					fo << QInt(stoi(tokens[0]), tokens[2]).operator~().toString(stoi(tokens[0])) << endl;
 					break;
 
 				case VALID_OPS::ROL:
+					fo << QInt(stoi(tokens[0]), tokens[2]).rol().toString(stoi(tokens[0])) << endl;
 					break;
 
 				case VALID_OPS::ROR:
+					fo << QInt(stoi(tokens[0]), tokens[2]).ror().toString(stoi(tokens[0])) << endl;
 					break;
 
 				default:
+					fo << endl;
 					break;
 			}
 		}
 
-		else if (args.size() == 4)
+		else if (tokens.size() == 4)
 		{
-			switch (stoi(args[2]))
+			cout << tokens[2] << endl;
+			switch (findOp(tokens[2]))
 			{
 				case VALID_OPS::AND:
+					fo << (QInt(stoi(tokens[0]), tokens[1]) & QInt(stoi(tokens[0]), tokens[3])).toString(stoi(tokens[0])) << endl;
 					break;
 				
 				case VALID_OPS::OR:
+					fo << (QInt(stoi(tokens[0]), tokens[1]) | QInt(stoi(tokens[0]), tokens[3])).toString(stoi(tokens[0])) << endl;
 					break;
 
 				case VALID_OPS::XOR:
+					fo << (QInt(stoi(tokens[0]), tokens[1]) ^ QInt(stoi(tokens[0]), tokens[3])).toString(stoi(tokens[0])) << endl;
 					break;
 
 				case VALID_OPS::LSL:
+					fo << (QInt(stoi(tokens[0]), tokens[1]) << stoi(tokens[3])).toString(stoi(tokens[0])) << endl;
 					break;
 
 				case VALID_OPS::ASR:
+					fo << (QInt(stoi(tokens[0]), tokens[1]) >> stoi(tokens[3])).toString(stoi(tokens[0])) << endl;
 					break;
 
 				case VALID_OPS::ADD:
+					fo << (QInt(stoi(tokens[0]), tokens[1]) + QInt(stoi(tokens[0]), tokens[3])).toString(stoi(tokens[0])) << endl;
 					break;
 
 				case VALID_OPS::SUBTRACT:
+					fo << (QInt(stoi(tokens[0]), tokens[1]) - QInt(stoi(tokens[0]), tokens[3])).toString(stoi(tokens[0])) << endl;
 					break;
 
 				case VALID_OPS::MULTIPLY:
+					fo << (QInt(stoi(tokens[0]), tokens[1]) * QInt(stoi(tokens[0]), tokens[3])).toString(stoi(tokens[0])) << endl;
 					break;
 
 				case VALID_OPS::DIVIDE:
+					fo << (QInt(stoi(tokens[0]), tokens[1]) / QInt(stoi(tokens[0]), tokens[3])).toString(stoi(tokens[0])) << endl;
 					break;
 
 				default:
@@ -155,5 +179,8 @@ int main(int argc, char** argv)
 		else
 			cout << "Bad command: " << command << endl;
 	}
+
+	cout << "File written." << endl;
+
 	return 0;
 }
