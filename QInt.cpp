@@ -3,8 +3,7 @@
 
 uint8_t** QInt::Pow2Table = nullptr;
 bool QInt::Pow2Table_Generate_ran = false;
-bool isOdd(string s);
-string divByTwo(string num);
+
 void QInt::Pow2Table_Generate()
 {
 	if (Pow2Table_Generate_ran)
@@ -30,6 +29,8 @@ void QInt::Pow2Table_Generate()
 
 	Pow2Table_Generate_ran = true;
 }
+
+//////////////////////////////////////////////////
 
 QInt::QInt(uint8_t base, string data) : QInt()
 {
@@ -88,9 +89,62 @@ QInt::QInt(uint8_t base, string data) : QInt()
 	}
 }
 
-QInt::QInt(const QInt& x) : QInt()
+bool isOdd(string s)
 {
-	this->data = x.data;
+	if ((s[s.size() - 1] - '0') % 2 == 1)
+		return true;
+	return false;
+}
+string divByTwo(string num)
+{
+	string ans;
+	if (num == "1" || num == "0")
+		return "0";
+	int idx = 0;
+	int temp = num[idx] - '0';
+	while (temp < 2)
+		temp = temp * 10 + (num[++idx] - '0');
+	while (num.size() > idx)
+	{
+		// Store result in answer i.e. temp / divisor 
+		ans += (temp / 2) + '0';
+
+		// Take next digit of number 
+		temp = (temp % 2) * 10 + num[++idx] - '0';
+	}
+	// If divisor is greater than number 
+	if (ans.size() == 0)
+		return "0";
+
+	// else return ans 
+	return ans;
+}
+QInt::QInt(string str, int base)
+{
+	bool isNeg = false;
+	if (str[0] == '-')
+	{
+		isNeg = true;
+		str = str.substr(1);
+	}
+	vector<bool> recase;
+	while (str != "0")
+	{
+		recase.push_back(isOdd(str));
+		str = divByTwo(str);
+	}
+	int k = 0;
+	for (auto i : recase)
+	{
+		if (k >= QLEN)
+			break;
+		this->data[k++] = i;
+	}
+	if (isNeg)
+	{
+		bitset<QLEN> one(1);
+		*this = (~*(this) + QInt(one));
+	}
 }
 
 QInt::QInt(const bitset<QLEN> p_value)
@@ -98,7 +152,7 @@ QInt::QInt(const bitset<QLEN> p_value)
 	this->data = p_value;
 }
 
-void QInt::operator=(const QInt& x)
+QInt::QInt(const QInt& x) : QInt()
 {
 	this->data = x.data;
 }
@@ -110,15 +164,12 @@ void QInt::randomize()
 		data[i] = rd() % 2;
 }
 
-int QInt::bit_size() const
+void QInt::operator=(const QInt& x)
 {
-	int sign;
-	sign = this->data[QLEN - 1];
-	int ans = QLEN - 1;
-	while (ans >= 0 && this->data[ans] == bool(sign))
-		ans--;
-	return ans + 1;
+	this->data = x.data;
 }
+
+//////////////////////////////////////////////////
 
 QInt QInt::operator+(const QInt& x)
 {
@@ -145,7 +196,6 @@ QInt QInt::operator-(const QInt& x)
 	return (*this) + (~x + QInt(2, "1"));
 }
 
-//TODO : Can check nhe lai
 QInt QInt::operator*(const QInt& x)
 {
 	
@@ -172,6 +222,7 @@ QInt QInt::operator*(const QInt& x)
 	return ans;
 }
 
+<<<<<<< HEAD
 QInt QInt::operator/(const QInt& x)
 {
 	QInt dvd = q_abs(*this), dvs = q_abs(x), ans = QInt("0");
@@ -197,29 +248,23 @@ QInt QInt::operator/(const QInt& x)
 	/*cout << "$ " << ans.toB10() << endl;*/
 	return ans;
 }
+=======
+//////////////////////////////////////////////////
+>>>>>>> origin
 
 QInt QInt::operator&(const QInt& x)
 {
-	QInt r = *this;
-	for (uint8_t i = 0; i < QLEN; i++)
-	{
-		r.data[i] = this->data[i] & x.data[i];
-	}
-	return r;
+	return QInt(data & x.data);
 }
 
 QInt QInt::operator|(const QInt& x)
 {
-	QInt r = *this;
-	for (uint8_t i = 0; i < QLEN; i++)
-	{
-		r.data[i] = this->data[i] | x.data[i];
-	}
-	return r;
+	return QInt(data | x.data);
 }
 
 QInt QInt::operator^(const QInt& x)
 {
+<<<<<<< HEAD
 	QInt r = *this;
 	for (uint8_t i = 0; i < QLEN; i++)
 	{
@@ -278,85 +323,54 @@ QInt::QInt(string num, int base)
 		bitset<QLEN> one(1);
 		*this = (~*(this) + QInt(one));
 	}
+=======
+	return QInt(data ^ x.data);
+>>>>>>> origin
 }
 
 QInt QInt::operator~() const
 {
-	QInt r = *this;
-	for (uint8_t i = 0; i < QLEN; i++)
-	{
-		r.data[i] = !(r.data[i]);
-	}
+	return QInt(~(this->data));
+}
+
+QInt QInt::operator<<(const int8_t& x)
+{
+	return QInt(this->data << x);
+}
+
+QInt QInt::operator>>(const int8_t& x)
+{
+	return QInt(this->data >> x);
+}
+<<<<<<< HEAD
+QInt QInt::rol(const int& n)
+=======
+
+QInt QInt::rol() const
+>>>>>>> origin
+{
+	// Safe mode
+	QInt r(this->data << 1);
+	r.data[0] = this->data[QLEN - 1];
 	return r;
 }
 
-QInt QInt::operator>> (const int& v_shift)
+QInt QInt::ror() const
 {
-	if (v_shift > QLEN || v_shift <= 0)
-		abort();
-	bitset<QLEN> re_value(this->data[QLEN - 1]);
-	int i = 0;
-	int k = v_shift;
-	while (k < QLEN)
-	{
-		re_value[i++] = this->data[k++];
-	}
-	return QInt(re_value);
+	// Safe mode
+	QInt r(this->data >> 1);
+	r.data[QLEN - 1] = this->data[0];
+	return r;
 }
 
-QInt QInt::operator<<(const int& v_shift)
-{
-	if (v_shift > QLEN || v_shift < 0)
-		abort();
-	bitset<QLEN> re_value(0);
-	int i = QLEN;
-	int k = QLEN - v_shift % QLEN - 1;
-	while (k >= 0)
-	{
-		re_value[--i] = this->data[k--];
-	}
-	return QInt(re_value);
-}
-QInt QInt::rol(const int& n)
-{
-	if (n >= QLEN || n < 0)
-		abort();
-	bitset<QLEN> ans;
-	int k = 2*QLEN - n%QLEN - 1;
-	int i = QLEN - 1;
-	while (i >= 0)
-	{
-		ans[i--] = this->data[(k) % QLEN];
-		k--;
-	}
-	return QInt(ans);
-}
-
-QInt QInt::ror(const int& n)
-{
-	if (n >= QLEN || n < 0)
-		abort();
-	bitset<QLEN> ans;
-	int k = n%QLEN;
-	int i = 0;
-	while (i < QLEN)
-	{
-		ans[i++] = this->data[(k) % QLEN];
-		k++;
-	}
-	return QInt(ans);
-}
+//////////////////////////////////////////////////
 
 string QInt::toB2()
 {
 	string r;
 
 	for (uint8_t i = 0; i < QLEN; i++)
-	{
 		r.insert(r.begin(), (data[i] ? '1' : '0'));
-		/*if ((i + 1) < QLEN && (i + 1) % 4 == 0)
-			r.insert(r.begin(), ' ');*/
-	}
 
 	// Trim string
 	if (r[0] == '0')
@@ -430,8 +444,6 @@ string QInt::toB16()
 		for (uint8_t j : {0, 1, 2, 3})
 			t += data.test((size_t)i + j) << j;
 		r.insert(r.begin(), HEX[t]);
-		/*if ((i + 4) < QLEN && (i + 4) % 16 == 0)
-			r.insert(r.begin(), ' ');*/
 	}
 
 	// Trim string

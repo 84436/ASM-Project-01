@@ -66,103 +66,94 @@ vector<string> tokenizer(string s)
 
 int main(int argc, char** argv)
 {
-	//if (argc != 3)
-	//{
-	//	cout << "Incorrect number of arguments." << endl;
-	//	return -1;
-	//}
+	if (argc != 3)
+	{
+		cout << "Incorrect number of arguments." << endl;
+		return -1;
+	}
 
-	//fstream fi(argv[1], fstream::in);
-	//fstream fo(argv[2], fstream::out | fstream::trunc);
+	fstream fi(argv[1], fstream::in);
+	fstream fo(argv[2], fstream::out | fstream::trunc);
 
-	//// Phòng trường hợp...
-	//if (!fi.is_open() || !fo.is_open())
-	//{
-	//	cout << "Failed to open file." << endl;
-	//	return -1;
-	//}
+	// Phòng trường hợp...
+	if (!fi.is_open() || !fo.is_open())
+	{
+		cout << "Failed to open file." << endl;
+		return -1;
+	}
 
-	//while (!fi.eof())
-	//{
-	//	// Đọc và tách command
-	//	string command;
-	//	getline(fi, command);
-	//	vector<string> args = tokenizer(command);
-	//	
-	//	if (args.size() == 3)
-	//	{
-	//		switch (stoi(args[1]))
-	//		{
-	//			case VALID_OPS::TO_BASE2:
-	//				break;
+	while (!fi.eof())
+	{
+		// Đọc và tách command
+		string command;
+		getline(fi, command);
+		vector<string> args = tokenizer(command);
+		
+		if (args.size() == 3)
+		{
+			switch (stoi(args[1]))
+			{
+				case VALID_OPS::TO_BASE2:
+					break;
 
-	//			case VALID_OPS::TO_BASE10:
-	//				break;
+				case VALID_OPS::TO_BASE10:
+					break;
 
-	//			case VALID_OPS::TO_BASE16:
-	//				break;
+				case VALID_OPS::TO_BASE16:
+					break;
 
-	//			case VALID_OPS::NOT:
-	//				break;
+				case VALID_OPS::NOT:
+					break;
 
-	//			case VALID_OPS::ROL:
-	//				break;
+				case VALID_OPS::ROL:
+					break;
 
-	//			case VALID_OPS::ROR:
-	//				break;
+				case VALID_OPS::ROR:
+					break;
 
-	//			default:
-	//				break;
-	//		}
-	//	}
+				default:
+					break;
+			}
+		}
 
-	//	else if (args.size() == 4)
-	//	{
-	//		switch (stoi(args[2]))
-	//		{
-	//			case VALID_OPS::AND:
-	//				break;
-	//			
-	//			case VALID_OPS::OR:
-	//				break;
+		else if (args.size() == 4)
+		{
+			switch (stoi(args[2]))
+			{
+				case VALID_OPS::AND:
+					break;
+				
+				case VALID_OPS::OR:
+					break;
 
-	//			case VALID_OPS::XOR:
-	//				break;
+				case VALID_OPS::XOR:
+					break;
 
-	//			case VALID_OPS::LSL:
-	//				break;
+				case VALID_OPS::LSL:
+					break;
 
-	//			case VALID_OPS::ASR:
-	//				break;
+				case VALID_OPS::ASR:
+					break;
 
-	//			case VALID_OPS::ADD:
-	//				break;
+				case VALID_OPS::ADD:
+					break;
 
-	//			case VALID_OPS::SUBTRACT:
-	//				break;
+				case VALID_OPS::SUBTRACT:
+					break;
 
-	//			case VALID_OPS::MULTIPLY:
-	//				break;
+				case VALID_OPS::MULTIPLY:
+					break;
 
-	//			case VALID_OPS::DIVIDE:
-	//				break;
+				case VALID_OPS::DIVIDE:
+					break;
 
-	//			default:
-	//				break;
-	//		}
-	//	}
+				default:
+					break;
+			}
+		}
 
-	//	else
-	//		cout << "Bad command: " << command << endl;
-	//}
-
-	QInt a("36446868780624476630340083329890");
-	QInt b("3191122320557494");
-	cout << a.toB10() << endl;
-	cout << b.toB10() << endl;
-	QInt ans2 = a / b;
-	QInt ans = b/a;
-	cout << ans2.toB10() << endl;
-	cout << ans.toB10() << endl;
+		else
+			cout << "Bad command: " << command << endl;
+	}
 	return 0;
 }
