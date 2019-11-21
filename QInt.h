@@ -35,7 +35,7 @@ class QInt
 		QInt operator+  (const QInt& x);
 		QInt operator-  (const QInt& x);
 		QInt operator*  (const QInt& x);
-		//QInt operator/  (const QInt& x);
+		QInt operator/  (const QInt& x);
 		QInt operator&  (const QInt& x);
 		QInt operator|  (const QInt& x);
 		QInt operator^  (const QInt& x);
@@ -44,8 +44,13 @@ class QInt
 		QInt operator~  () const;
 		QInt rol        (const int& n);
 		QInt ror        (const int& n);
-
 		
+
+		friend QInt q_abs(QInt x);
+
+		friend inline int compare( QInt& lhs,  QInt& rhs);
+		friend inline bool operator==(const QInt& lhs, const QInt& rhs);
+
 		string toB2();
 		string toB10();
 		string toB16();

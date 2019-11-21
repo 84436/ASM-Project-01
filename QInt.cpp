@@ -140,7 +140,7 @@ QInt QInt::operator+(const QInt& x)
 	return r;
 }
 
-QInt QInt::operator-(const QInt& x)
+QInt QInt::operator-(const QInt& x) 
 {
 	return (*this) + (~x + QInt(2, "1"));
 }
@@ -148,23 +148,53 @@ QInt QInt::operator-(const QInt& x)
 //TODO : Can check nhe lai
 QInt QInt::operator*(const QInt& x)
 {
-
-	QInt ans("0");
-	QInt _tmp(x);
-	int count = 0;
-	bool isNeg = (x.data[1] == 1);
-	string multicand = _tmp.toB10();
-	if (multicand[0] == '-')
-		multicand = multicand.substr(1);
-	while (multicand != "0")
+	
+	QInt multer = q_abs(*this), multand = q_abs(x), ans = QInt("0");
+	//cout << "$ " << multer.toB10() << " " << multand.toB10();
+	if (compare(multer, multand) < 0)
 	{
-			if (isOdd(multicand))
-				ans = ans + (*this << count);
+		QInt __tmp(x);
+		return  __tmp * (*this);
+	}
+	int sign = (this->data[QLEN - 1] == 0) ^ (x.data[QLEN - 1] == 1) ? 1 : -1;	
+	int count = 0;
+	QInt zero("0");
+	while (compare(multand,zero) != 0)
+	{
+		//cout << "$ " << multand.toB10() << endl;
+			if (multand.data[0] == 1)
+				ans = ans + (multer << count);
 			count++;
-			multicand = divByTwo(multicand);
+			multand = multand / QInt("2");
 		}
-	if (isNeg)
+	if (sign == -1)
 		ans = (~ans + QInt("1"));
+	return ans;
+}
+
+QInt QInt::operator/(const QInt& x)
+{
+	QInt dvd = q_abs(*this), dvs = q_abs(x), ans = QInt("0");
+	int sign = (this->data[QLEN - 1] == 0) ^ (x.data[QLEN - 1] == 1)? 1 : -1;
+	/*cout << "$ " << sign;
+	cout << "$ " << dvd.toB10() << " " << dvs.toB10() << " " << endl;*/
+	while (compare(dvd,dvs) >= 0)  
+	{
+		QInt temp = dvs;
+		QInt m = QInt("1");
+		QInt temp_temp = temp << 1;
+		while (compare(temp_temp, dvd) <= 0) 
+		{
+			temp = temp << 1;
+			m = m << 1;
+			temp_temp = temp << 1;
+		}
+		dvd = dvd - temp;
+		ans = ans + m;
+	}
+	if (sign == -1)
+		ans = ~ans + QInt("1");
+	/*cout << "$ " << ans.toB10() << endl;*/
 	return ans;
 }
 
@@ -215,17 +245,11 @@ string divByTwo(string num)
 		temp = temp * 10 + (num[++idx] - '0');
 	while (num.size() > idx)
 	{
-		// Store result in answer i.e. temp / divisor 
 		ans += (temp / 2) + '0';
-
-		// Take next digit of number 
 		temp = (temp % 2) * 10 + num[++idx] - '0';
 	}
-	// If divisor is greater than number 
 	if (ans.size() == 0)
 		return "0";
-
-	// else return ans 
 	return ans;
 }
 QInt::QInt(string num, int base)
@@ -293,8 +317,6 @@ QInt QInt::operator<<(const int& v_shift)
 	}
 	return QInt(re_value);
 }
-
-//TODO : Làm chưa xong
 QInt QInt::rol(const int& n)
 {
 	if (n >= QLEN || n < 0)
@@ -420,4 +442,39 @@ string QInt::toB16()
 	}
 
 	return r;
+}
+
+QInt q_abs(QInt x)
+{
+	if (x.data[QLEN - 1] == 1)
+		return (~x + QInt("1"));
+	return x;
+}
+
+inline int compare(QInt& lhs, QInt& rhs)
+{
+	if (lhs == rhs)
+		return 0;
+	else
+	{
+		QInt ans = lhs-rhs;
+		return ans.data[QLEN - 1] == 1 ? -1 : 1;
+	}
+}
+
+inline bool operator==(const QInt& lhs, const QInt& rhs)
+{
+	for (int i = 0; i < QLEN; i++)
+	{
+		if (lhs.data[i] != rhs.data[i])
+			return false;
+	}
+	return true;
+}
+
+int cmp(QInt a, QInt b)
+{
+	if ((a ^ b) == QInt("0"))
+		return 0;
+	return false;
 }

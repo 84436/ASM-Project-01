@@ -4,7 +4,7 @@
 -   [ ] Ops (số học):
     -   [x] `operator+`
     -   [ ] `operator-`
-    -   [ ] `operator*`
+    -   [*] `operator*`
     -   [ ] `operator/`
 -   [x] Ops (bitwise):
     -   [x] `operator&`
@@ -17,7 +17,7 @@
     -   [x] `operator=`
 -   [ ] Input/Nhập từ
     -   [x] Base-2
-    -   [ ] Base-10
+    -   [x] Base-10
     -   [ ] Base-16
 -   [x] Output/Xuất ra
     -   [x] Base-2
