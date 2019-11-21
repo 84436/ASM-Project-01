@@ -1,11 +1,11 @@
 -   [x] `class QInt`
     -   [x] Ctor mặc định, gán, chép
     -   [x] Ctor random (test)
--   [ ] Ops (số học):
+-   [x] Ops (số học):
     -   [x] `operator+`
-    -   [ ] `operator-`
-    -   [*] `operator*`
-    -   [ ] `operator/`
+    -   [x] `operator-`
+    -   [x] `operator*`
+    -   [x] `operator/`
 -   [x] Ops (bitwise):
     -   [x] `operator&`
     -   [x] `operator|`
@@ -15,12 +15,13 @@
     -   [x] `operator>>` (ASR)
 -   [x] Ops (khác):
     -   [x] `operator=`
--   [ ] Input/Nhập từ
+-   [x] Input/Nhập từ
     -   [x] Base-2
     -   [x] Base-10
-    -   [ ] Base-16
+    -   [x] Base-16
 -   [x] Output/Xuất ra
     -   [x] Base-2
     -   [x] Base-10
     -   [x] Base-16
--   [ ] Sử dụng output chuẩn thay vì stream `cout`
+-   [x] Sử dụng output chuẩn thay vì stream `cout`
+
