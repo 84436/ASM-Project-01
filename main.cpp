@@ -85,6 +85,21 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
+	// Đếm số dòng trong file
+	int32_t line_total = 0;
+	while (!fi.eof())
+	{
+		string command;
+		getline(fi, command);
+		if (!command.empty() && command.find_first_not_of(' ') != string::npos)
+			line_total++;
+	}
+
+	fi.close();
+
+	fi.open(argv[1], fstream::in);
+
+	int32_t line_current = 0;
 	while (!fi.eof())
 	{
 		// Đọc và tách command
@@ -98,9 +113,12 @@ int main(int argc, char** argv)
 		// Xét số thành phần trong một command, tìm toán tử tương ứng,
 		// tính và ghi kết quả ra file
 
+		line_current++;
+		cout << "Line " << line_current << "/" << line_total << ": ";
+
 		if (tokens.size() == 3)
 		{
-			cout << tokens[1] << endl;
+			cout << tokens[1];
 			switch (findOp(tokens[1]))
 			{
 				case VALID_OPS::TO_BASE2:
@@ -135,7 +153,7 @@ int main(int argc, char** argv)
 
 		else if (tokens.size() == 4)
 		{
-			cout << tokens[2] << endl;
+			cout << tokens[2];
 			switch (findOp(tokens[2]))
 			{
 				case VALID_OPS::AND:
@@ -180,7 +198,9 @@ int main(int argc, char** argv)
 		}
 
 		else
-			cout << "Bad command: " << command << endl;
+			cout << "Bad command: " << command;
+
+		cout << endl;
 	}
 
 	cout << "File written." << endl;
