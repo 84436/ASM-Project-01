@@ -75,7 +75,7 @@ Nhóm gồm 2 thành viên (thuộc lớp `18CLC6`):
 
 ### Chuyển đổi cơ số
 
-Việc chuyển đổi giữa các hệ cơ số sẽ được cài đặt trong constructor của `QInt` (chuyển từ string số hệ 2/10/16 sang biểu diễn nhị phân trong phần private của `QInt`, tức bitset) và hàm chuyển `toString` (chuyển từ bitset sang string số hệ 2/10/16.)
+Việc chuyển đổi giữa các hệ cơ ôngsố sẽ được cài đặt trong constructor của `QInt` (chuyển từ string số hệ 2/10/16 sang biểu diễn nhị phân trong phần private của `QInt`, tức bitset) và hàm chuyển `toString` (chuyển từ bitset sang string số hệ 2/10/16.)
 
 
 
