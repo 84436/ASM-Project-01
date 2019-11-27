@@ -28,7 +28,7 @@ Nhóm gồm 2 thành viên (thuộc lớp `18CLC6`):
 ### Ý tưởng thiết kế
 
 -   <backstory đi tìm cách lưu trữ; thử mảng bool, 4 biến int32_t, v.v.>
--   <tìm ra std::bitset>
+-   <tìm ra `std::bitset`>
 -   <mọi thứ sẽ xử lý trên hệ 2; hệ 10 hay 16 chỉ là cách biểu diễn và là nhiệm vụ của các hàm chuyển đổi>
 -   <gì gì đó>
 
@@ -38,7 +38,7 @@ Nhóm gồm 2 thành viên (thuộc lớp `18CLC6`):
 
 ### Các nguồn tham khảo
 
--   [std::bitset trên CPlusPlus.com](http://www.cplusplus.com/reference/bitset/bitset/)
+-   [`std::bitset` trên CPlusPlus.com](http://www.cplusplus.com/reference/bitset/bitset/)
 -   Ernst W. Mayer (2016), "Efficient long division via Montgomery multiply", phiên bản 6 ([arXiv:1303.0328v6 [cs.DS]](https://arxiv.org/abs/1303.0328v6)).
     Có sẵn file đính kèm với báo cáo (`1303.0328.pdf`).
 
@@ -85,6 +85,8 @@ Việc chuyển đổi giữa các hệ cơ ôngsố sẽ được cài đặt t
 
 ##### base2 $\leftrightarrow$ base16
 
+Mỗi 4 bit trong bitset sẽ tương ứng với 1 số trong hệ 16, nên việc chuyển đổi qua lại giữa 2 hệ này tương đối dễ dàng.
+
 
 
 ##### base10 $\leftrightarrow$ base16
@@ -93,49 +95,37 @@ Vì đã có sẳn hàm để chuyển đổi từ hệ 10/16 sang 2, nên cách
 
 
 
-### Phép toán logic
+### Toán tử logic
 
-##### `operator~` (NOT)
-
-
-
-##### `rol()` (Xoay trái 1bit)
+Ngoại trừ những toán tử được mô tả bên dưới, các toán tử còn lại (`~`, `&`, `|`, `^` và `<<`) được thực hiện bởi các toán tử tương ứng có sẵn trong `std::bitset`.
 
 
 
-##### `ror()` (Xoay phải 1bit)
+##### `rol()`/`ror()` (Xoay trái/Xoay phải 1bit)
 
-
-
-##### `operator&` (AND)
-
-
-
-##### `operator|` (OR)
-
-
-
-##### `operator^` (XOR)
-
-
-
-##### `operator<<` (Shift trái)
+Việc xoay bit cơ bản là đánh dấu bit cao nhất (đối với `ror()`) / bit thấp nhất (đối với `rol()`), shift bitset hiện tại theo hướng ngược lại hướng đang xoay, và điền lại bit thấp nhất (đối với `ror()`) / bit cao nhất (đối với `rol()`).
 
 
 
 ##### `operator>>` (Shift phải số học)
 
+Vì `operator>>` có sẵn trong `std::bitset` là phép shift phải logic nên cần phải xử lý thủ công việc điền các "lỗ trống" có được sau khi shift với bit cao nhất (MSB) thay vì bit `0` trước khi shift. Giải pháp được cài đặt trong đồ án gồm 3 bước:
+
+-   Tạo một bitset với các bit cao cần điền với MSB đã được đánh dấu. Gọi bitset này là mask.
+-   Shift phải bitset hiện tại với `operator>>` có sẵn trong `std::bitset`.
+-   OR mask với bitset hiện tại, và trả về kết quả.
 
 
 
-
-### Phép toán số học
+### Toán tử số học
 
 ##### `operator+` (Phép cộng)
 
 
 
 ##### `operator-` (Phép trừ)
+
+Bản chất phép trừ một số là phép cộng với bù 2 của số đó, nên toán tử này tận dụng được `operator+` và `operator~` đã được cài đặt trước đó.
 
 
 
