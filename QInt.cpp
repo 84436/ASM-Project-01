@@ -496,6 +496,8 @@ string QInt::toString(uint8_t base)
 		// Thêm dấu âm nếu có .-.
 		if (data[QLEN - 1])
 			r.insert(r.begin(), '-');
+
+		delete[] b10;
 	}
 
 	else if (base == 16)
