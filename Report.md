@@ -79,7 +79,7 @@ Nhóm gồm 2 thành viên (thuộc lớp `18CLC6`):
 
 
 
-[Với mỗi chức năng: insert header, mô tả, ảnh chụp minh họa]
+---
 
 
 
@@ -90,6 +90,10 @@ Việc chuyển đổi giữa các hệ cơ số được cài đặt trong cons
 
 
 ##### base2 $\rightarrow$ base10
+
+|     ![2TO10](Report_images/2TO10.png)     |
+| :---------------------------------------: |
+| Chuyển đổi cơ số (base2 $\rightarrow$ 10) |
 
 Mỗi bit trong bitset sẽ có giá trị tương ứng trong hệ 10 là $2^k$, với $k = [0, 127]$.
 
@@ -107,11 +111,17 @@ Khi đã có "bảng $2^k$", việc chuyển bitset thành số hệ 10 bây gi�
 
 **base2 $\leftarrow$ base10**
 
-
+|       ![10TO2](Report_images/10TO2.png)       |
+| :-------------------------------------------: |
+| Chuyển đổi cơ số (base10 $\rightarrow$ base2) |
 
 
 
 ##### base2 $\leftrightarrow$ base16
+
+|       ![2TO16](Report_images/2TO16.png)       |       ![16TO2](Report_images/16TO2.png)       |
+| :-------------------------------------------: | :-------------------------------------------: |
+| Chuyển đổi cơ số (base2 $\rightarrow$ base16) | Chuyển đổi cơ số (base16 $\rightarrow$ base2) |
 
 Mỗi 4 bit trong bitset sẽ tương ứng với 1 số trong hệ 16, nên việc chuyển đổi qua lại giữa 2 hệ này tương đối dễ dàng:
 
@@ -123,7 +133,15 @@ Mỗi 4 bit trong bitset sẽ tương ứng với 1 số trong hệ 16, nên vi�
 
 ##### base10 $\leftrightarrow$ base16
 
+|      ![10TO16](Report_images/10TO16.png)       |      ![16TO10](Report_images/16TO10.png)       |
+| :--------------------------------------------: | :--------------------------------------------: |
+| Chuyển đổi cơ số (base10 $\rightarrow$ base16) | Chuyển đổi cơ số (base16 $\rightarrow$ base10) |
+
 Vì đã có sẳn hàm để chuyển đổi từ hệ 2 sang 10/16, nên cách tiện nhất để chuyển đổi giữa hệ 10 và 16 là thông qua hệ 2 làm trung gian.
+
+
+
+---
 
 
 
@@ -131,15 +149,35 @@ Vì đã có sẳn hàm để chuyển đổi từ hệ 2 sang 10/16, nên cách
 
 Ngoại trừ những toán tử được mô tả bên dưới, các toán tử còn lại (`~`, `&`, `|`, `^` và `<<`) được thực hiện bởi các toán tử tương ứng có sẵn trong `std::bitset`.
 
+| ![NOT](Report_images/NOT.png) | ![XOR](Report_images/XOR.png) |
+| :---------------------------: | :---------------------------: |
+|        Phép `~` (NOT)         |        Phép `^` (XOR)         |
+
+| ![AND](Report_images/AND.png) | ![OR](Report_images/OR.png) |
+| :---------------------------: | :-------------------------: |
+|        Phép `&` (AND)         |        Phép `|` (OR)        |
+
+| ![LSL](Report_images/LSL.png) |
+| :---------------------------: |
+|    Phép `<<` (Shift trái)     |
+
 
 
 ##### `rol()`/`ror()` (Xoay trái/Xoay phải 1bit)
+
+| ![ROL](Report_images/ROL.png) | ![ROR](Report_images/ROR.png) |
+| :---------------------------: | :---------------------------: |
+|  Phép `rol` (xoay trái 1bit)  |  Phép `ror` (xoay phải 1bit)  |
 
 Việc xoay bit cơ bản là đánh dấu bit cao nhất (đối với `ror()`) / bit thấp nhất (đối với `rol()`), shift bitset hiện tại theo hướng ngược lại hướng đang xoay, và điền lại bit thấp nhất (đối với `ror()`) / bit cao nhất (đối với `rol()`).
 
 
 
 ##### `operator>>` (Shift phải số học)
+
+| ![ASR](Report_images/ASR.png) |
+| :---------------------------: |
+| Phép `>>` (Shift phải số học) |
 
 Vì `operator>>` có sẵn trong `std::bitset` là phép shift phải logic nên cần phải xử lý thủ công việc điền các "lỗ trống" có được sau khi shift với bit cao nhất (MSB) thay vì bit `0` trước khi shift. Giải pháp được cài đặt:
 
@@ -149,9 +187,17 @@ Vì `operator>>` có sẵn trong `std::bitset` là phép shift phải logic nên
 
 
 
+---
+
+
+
 ### Toán tử số học
 
 ##### `operator+` (Phép cộng)
+
+| ![ADD](Report_images/ADD.png) |
+| :---------------------------: |
+|        Phép cộng (`+`)        |
 
 Phép cộng này sẽ duyệt qua bitset của số gốc và số cần cộng, và sau đó thực hiện phép cộng trên từng bit một (kèm với bit nhớ.) Cách cài đặt phép cộng bit trong đây được dựa trên các "luật cộng bit" suy ra từ 8 trạng thái có thể của 3 bit: bit gốc, bit được cộng vào và bit nhớ:
 
@@ -170,12 +216,25 @@ Phép cộng này sẽ duyệt qua bitset của số gốc và số cần cộng
 
 ##### `operator-` (Phép trừ)
 
+| ![SUB](Report_images/SUB.png) |
+| :---------------------------: |
+|        Phép trừ (`-`)         |
+
 Bản chất phép trừ một số là phép cộng với bù 2 của số đó, nên toán tử này tận dụng được `operator+` và `operator~` đã được cài đặt trước đó.
 
 
 
 ##### `operator*` (Phép nhân)
 
+| ![MULT](Report_images/MULT.png) |
+| :-----------------------------: |
+|         Phép nhân (`*`)         |
+
 
 
 ##### `operator/` (Phép chia)
+
+| ![DIV](Report_images/DIV.png) |
+| :---------------------------: |
+|        Phép chia (`/`)        |
+
