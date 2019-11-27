@@ -3,7 +3,7 @@
 
 uint8_t** QInt::Pow2Table = nullptr;
 bool QInt::Pow2Table_Generate_ran = false;
-
+//Singleton Table de convert base2 -> base10
 void QInt::Pow2Table_Generate()
 {
 	if (Pow2Table_Generate_ran)
@@ -12,6 +12,7 @@ void QInt::Pow2Table_Generate()
 	Pow2Table = new uint8_t * [QLEN]();
 	for (uint8_t i = 0; i < QLEN; i++)
 		Pow2Table[i] = new uint8_t[DLEN]();
+	//Singleton startpoint
 
 	Pow2Table[0][0] = 1;
 	for (uint8_t b = 1; b < QLEN; b++)
@@ -21,6 +22,7 @@ void QInt::Pow2Table_Generate()
 			Pow2Table[b][d] += 2 * Pow2Table[b - 1][d];
 			if (Pow2Table[b][d] >= 10 && d < DLEN - 1)
 			{
+				//Cong don phan tu trong table
 				Pow2Table[b][d + 1] += Pow2Table[b][d] / 10;
 				Pow2Table[b][d] %= 10;
 			}
@@ -32,15 +34,19 @@ void QInt::Pow2Table_Generate()
 
 //////////////////////////////////////////////////
 
+//Tra ve true neu string bieu dien mot so nguyen le
 bool isOdd(string s)
 {
 	if ((s[s.size() - 1] - '0') % 2 == 1)
 		return true;
 	return false;
 }
+
+//Chia string bieu dien so nguyen cho 2
 string divByTwo(string num)
 {
 	string ans;
+	//Kiem tra so am/so duong nguoc dau cac kieu
 	if (num == "1" || num == "0")
 		return "0";
 	int idx = 0;
@@ -49,21 +55,22 @@ string divByTwo(string num)
 		temp = temp * 10 + (num[++idx] - '0');
 	while (num.size() > idx)
 	{
-		// Store result in answer i.e. temp / divisor 
+		//Chia cho 2 va cong cho 0
 		ans += (temp / 2) + '0';
 
-		// Take next digit of number 
+		//Tach so du tu temp ra
 		temp = (temp % 2) * 10 + num[++idx] - '0';
 	}
-	// If divisor is greater than number 
+	// Neu so chia lon hon so bi chia
 	if (ans.size() == 0)
 		return "0";
 
-	// else return ans 
+	//Khong thi tra ve ket qua
 	return ans;
 }
 QInt::QInt(uint8_t base, string data) : QInt()
 {
+	//O day chung toi khong lam the
 	if (data.empty())
 	{
 		cout << "Bad string." << endl;
@@ -148,16 +155,19 @@ QInt::QInt(uint8_t base, string data) : QInt()
 	}
 }
 
+//Convert bitset thanh QInt
 QInt::QInt(const bitset<QLEN> p_value)
 {
 	this->data = p_value;
 }
 
+//Copy Constuctor
 QInt::QInt(const QInt& x) : QInt()
 {
 	this->data = x.data;
 }
 
+//Random cho QInt - ho tro test cac kieu
 void QInt::randomize()
 {
 	random_device rd;
@@ -165,12 +175,14 @@ void QInt::randomize()
 		data[i] = rd() % 2;
 }
 
+//Operator = cho QInt
 void QInt::operator=(const QInt& x)
 {
 	this->data = x.data;
 }
 
 //////////////////////////////////////////////////
+//CAC OPERATOR TINH TOAN
 
 QInt QInt::operator+(const QInt& x)
 {
@@ -194,12 +206,14 @@ QInt QInt::operator+(const QInt& x)
 
 QInt QInt::operator-(const QInt& x)
 {
+	//Tru la cong voi bu hai cua x
 	return (*this) + (~x + QInt(2, "1"));
 }
 
 QInt QInt::operator*(const QInt& x)
 {
 
+	//Xu li so cung dau, khac dau
 	QInt multer = q_abs(*this), multand = q_abs(x), ans = QInt(2, "0");
 	//cout << "$ " << multer.toB10() << " " << multand.toB10();
 	if (compare(multer, multand) < 0)
@@ -208,16 +222,22 @@ QInt QInt::operator*(const QInt& x)
 		return  __tmp * (*this);
 	}
 	int sign = (this->data[QLEN - 1] == 0) ^ (x.data[QLEN - 1] == 1) ? 1 : -1;
+	//Chuan  bi data
 	int count = 0;
 	QInt zero(2, "0");
+
+
 	while (compare(multand, zero) != 0)
 	{
 		//cout << "$ " << multand.toB10() << endl;
+		//Neu bit la 1 thi shift bit qua de cong, khong thi thoi
 		if (multand.data[0] == 1)
 			ans = ans + (multer << count);
 		count++;
 		multand = multand / QInt(10, "2");
 	}
+
+	//Neu khac dau thi dao dau, khong khac dau thi thoi
 	if (sign == -1)
 		ans = (~ans + QInt(2, "1"));
 	return ans;
@@ -249,6 +269,7 @@ QInt QInt::operator/(const QInt& x)
 	return ans;
 }
 
+//Ham tri tuyet doi cac kieu
 QInt q_abs(QInt x)
 {
 	if (x.data[QLEN - 1] == 1)
@@ -256,6 +277,7 @@ QInt q_abs(QInt x)
 	return x;
 }
 
+//Ham compare cho 2 QInt, ho tro cho cac operator so sanh
 inline int compare(QInt& lhs, QInt& rhs)
 {
 	if (lhs == rhs)
@@ -267,6 +289,7 @@ inline int compare(QInt& lhs, QInt& rhs)
 	}
 }
 
+//Operator ==
 inline bool operator==(const QInt& lhs, const QInt& rhs)
 {
 	for (int i = 0; i < QLEN; i++)
@@ -277,6 +300,7 @@ inline bool operator==(const QInt& lhs, const QInt& rhs)
 	return true;
 }
 
+//Ham cmp, ho tro so sanh bang
 int cmp(QInt a, QInt b)
 {
 	if ((a ^ b) == QInt(2, "0"))
@@ -311,14 +335,21 @@ QInt QInt::operator<<(const int8_t& x)
 	return QInt(this->data << x);
 }
 
+//Shift luan li nen no phai khac voi phan con lai
 QInt QInt::operator>>(const int8_t& x)
 {
+	
 	if (x > QLEN || x < 0)
 		abort();
+
+	//Tao mot cai vong
 	bitset<QLEN> re_value;
+	//Init cai vong theo bit cuoi cua so can shift, luan li nam o day
 	if (this->data[QLEN - 1]) re_value.flip();
 	int i = 0;
 	int k = x;
+
+	//Cat cai vong ra theo so x can shift
 	while (k < QLEN)
 	{
 		re_value[i++] = this->data[k++];
