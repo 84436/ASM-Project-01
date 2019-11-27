@@ -1,9 +1,25 @@
 ﻿#include "QInt.h"
 #include <sstream>
 
+/* Việc tính toán 2^k với k nằm trong khoảng [0, 127]
+ * được cài đặt với mô hình bảng singleton
+ * để giảm thiểu chi phí tính toán trong cả vòng đời chương trình
+ * thay vì cài đặt một hàm tính toán từng số 2^k khi cần.
+ */
 uint8_t** QInt::Pow2Table = nullptr;
+
+// Flag để đánh dấu không thực hiện tạo bảng 2^k bên dưới
+// (mô hình singleton)
 bool QInt::Pow2Table_Generate_ran = false;
-//Singleton Table de convert base2 -> base10
+
+/* Tạo "bảng 2^k" tính từ 2^0 đến 2^(QLEN-1) (cụ thể là 2^127).
+ * Được dùng trong chuyển đổi bitset nội bộ --> string số hệ 10.
+ *
+ * Ý tưởng cơ bản:
+ * Lưu từng chữ số một dưới dạng một mảng DLEN phần tử;
+ * mỗi bậc 2^k được tính bằng cách nhân đôi 2^(k-1),
+ * số dư (carry) sẽ được cộng dồn qua chữ số kế tiếp.
+ */
 void QInt::Pow2Table_Generate()
 {
 	if (Pow2Table_Generate_ran)
@@ -12,7 +28,6 @@ void QInt::Pow2Table_Generate()
 	Pow2Table = new uint8_t * [QLEN]();
 	for (uint8_t i = 0; i < QLEN; i++)
 		Pow2Table[i] = new uint8_t[DLEN]();
-	//Singleton startpoint
 
 	Pow2Table[0][0] = 1;
 	for (uint8_t b = 1; b < QLEN; b++)
@@ -22,7 +37,6 @@ void QInt::Pow2Table_Generate()
 			Pow2Table[b][d] += 2 * Pow2Table[b - 1][d];
 			if (Pow2Table[b][d] >= 10 && d < DLEN - 1)
 			{
-				//Cong don phan tu trong table
 				Pow2Table[b][d + 1] += Pow2Table[b][d] / 10;
 				Pow2Table[b][d] %= 10;
 			}
@@ -68,9 +82,11 @@ string divByTwo(string num)
 	//Khong thi tra ve ket qua
 	return ans;
 }
+// Chuyển string số hệ 2/10/16 thành bitset trong nội bộ QInt
 QInt::QInt(uint8_t base, string data) : QInt()
 {
 	//O day chung toi khong lam the
+	// ":)))))" -- Thiện
 	if (data.empty())
 	{
 		cout << "Bad string." << endl;
@@ -155,7 +171,7 @@ QInt::QInt(uint8_t base, string data) : QInt()
 	}
 }
 
-//Convert bitset thanh QInt
+// Sao chép bitset từ bên ngoài vào
 QInt::QInt(const bitset<QLEN> p_value)
 {
 	this->data = p_value;
@@ -167,7 +183,7 @@ QInt::QInt(const QInt& x) : QInt()
 	this->data = x.data;
 }
 
-//Random cho QInt - ho tro test cac kieu
+// Ngẫu nhiên các giá trị trong bitset (hỗ trợ quá trình gỡ lỗi)
 void QInt::randomize()
 {
 	random_device rd;
@@ -175,15 +191,17 @@ void QInt::randomize()
 		data[i] = rd() % 2;
 }
 
-//Operator = cho QInt
+// Phép gán (chép)
 void QInt::operator=(const QInt& x)
 {
 	this->data = x.data;
 }
 
 //////////////////////////////////////////////////
-//CAC OPERATOR TINH TOAN
+// TOÁN TỬ SỐ HỌC
+//////////////////////////////////////////////////
 
+// Phép cộng
 QInt QInt::operator+(const QInt& x)
 {
 	QInt r;
@@ -204,12 +222,14 @@ QInt QInt::operator+(const QInt& x)
 	return r;
 }
 
+// Phép trừ
 QInt QInt::operator-(const QInt& x)
 {
-	//Tru la cong voi bu hai cua x
+	// Trừ là cộng với bù 2 tương ứng
 	return (*this) + (~x + QInt(2, "1"));
 }
 
+// Phép nhân
 QInt QInt::operator*(const QInt& x)
 {
 
@@ -243,6 +263,7 @@ QInt QInt::operator*(const QInt& x)
 	return ans;
 }
 
+// Phép chia
 QInt QInt::operator/(const QInt& x)
 {
 	QInt dvd = q_abs(*this), dvs = q_abs(x), ans = QInt(2, "0");
@@ -269,7 +290,7 @@ QInt QInt::operator/(const QInt& x)
 	return ans;
 }
 
-//Ham tri tuyet doi cac kieu
+// Lấy trị tuyệt đối
 QInt q_abs(QInt x)
 {
 	if (x.data[QLEN - 1] == 1)
@@ -277,7 +298,7 @@ QInt q_abs(QInt x)
 	return x;
 }
 
-//Ham compare cho 2 QInt, ho tro cho cac operator so sanh
+// Hỗ trợ các phép so sánh
 inline int compare(QInt& lhs, QInt& rhs)
 {
 	if (lhs == rhs)
@@ -289,7 +310,7 @@ inline int compare(QInt& lhs, QInt& rhs)
 	}
 }
 
-//Operator ==
+// So sánh bằng
 inline bool operator==(const QInt& lhs, const QInt& rhs)
 {
 	for (int i = 0; i < QLEN; i++)
@@ -300,7 +321,7 @@ inline bool operator==(const QInt& lhs, const QInt& rhs)
 	return true;
 }
 
-//Ham cmp, ho tro so sanh bang
+// Hỗ trợ cho so sánh bằng
 int cmp(QInt a, QInt b)
 {
 	if ((a ^ b) == QInt(2, "0"))
@@ -309,33 +330,43 @@ int cmp(QInt a, QInt b)
 }
 
 //////////////////////////////////////////////////
+/* TOÁN TỬ LOGIC
+ * Trừ ASR, ROL và ROR, các hàm còn lại đều là
+ * wrapper cho các toán tử có sẵn trong std::bitset
+ */
+//////////////////////////////////////////////////
 
+// AND
 QInt QInt::operator&(const QInt& x)
 {
 	return QInt(data & x.data);
 }
 
+// OR
 QInt QInt::operator|(const QInt& x)
 {
 	return QInt(data | x.data);
 }
 
+// XOR
 QInt QInt::operator^(const QInt& x)
 {
 	return QInt(data ^ x.data);
 }
 
+// NOT
 QInt QInt::operator~() const
 {
 	return QInt(~(this->data));
 }
 
+// LSL (Shift trái)
 QInt QInt::operator<<(const int8_t& x)
 {
 	return QInt(this->data << x);
 }
 
-//Shift luan li nen no phai khac voi phan con lai
+// ASR (Shift phải số học)
 QInt QInt::operator>>(const int8_t& x)
 {
 	
@@ -357,6 +388,7 @@ QInt QInt::operator>>(const int8_t& x)
 	return QInt(re_value);
 }
 
+// ROL (Xoay trái)
 QInt QInt::rol() const
 {
 	// Safe mode
@@ -365,6 +397,7 @@ QInt QInt::rol() const
 	return r;
 }
 
+// ROR (Xoay phải)
 QInt QInt::ror() const
 {
 	// Safe mode
@@ -375,97 +408,7 @@ QInt QInt::ror() const
 
 //////////////////////////////////////////////////
 
-//string QInt::toB2()
-//{
-//	string r;
-//
-//	for (uint8_t i = 0; i < QLEN; i++)
-//		r.insert(r.begin(), (data[i] ? '1' : '0'));
-//
-//	// Trim string
-//	if (r[0] == '0')
-//	{
-//		size_t del_mark = r.find_first_not_of('0');
-//		r.erase(0, (del_mark > r.size()) ? r.size() - 1 : del_mark);
-//	}
-//
-//	return r;
-//}
-//
-//string QInt::toB10()
-//{
-//	string r;
-//
-//	uint8_t* b10 = new uint8_t[DLEN]();
-//
-//	// Tạo bản sao
-//	QInt temp;
-//	if (data[QLEN - 1])
-//	{
-//		bitset<QLEN> one;
-//		one.flip(0);
-//		temp = ~(*this) + QInt(one);
-//	}
-//	else
-//	{
-//		temp = *this;
-//	}
-//
-//	// Cộng và ghi ra string
-//	for (uint8_t b = 0; b < QLEN; b++)
-//	{
-//		if (temp.data[b])
-//		{
-//			for (uint8_t d = 0; d < DLEN; d++)
-//			{
-//				b10[d] += Pow2Table[b][d];
-//				if (b10[d] >= 10 && d < DLEN - 1)
-//				{
-//					b10[d + 1] += b10[d] / 10;
-//					b10[d] %= 10;
-//				}
-//			}
-//		}
-//	}
-//	for (uint8_t d = 0; d < DLEN; d++)
-//		r.append(to_string(b10[DLEN - 1 - d]));
-//
-//	// Trim string
-//	if (r[0] == '0')
-//	{
-//		size_t del_mark = r.find_first_not_of('0');
-//		r.erase(0, (del_mark > r.size()) ? r.size() - 1 : del_mark);
-//	}
-//
-//	// Thêm dấu âm nếu có .-.
-//	if (data[QLEN - 1])
-//		r.insert(r.begin(), '-');
-//
-//	return r;
-//}
-//
-//string QInt::toB16()
-//{
-//	string r;
-//
-//	for (uint8_t i = 0; i < QLEN; i += 4)
-//	{
-//		uint8_t t = 0;
-//		for (uint8_t j : {0, 1, 2, 3})
-//			t += data.test((size_t)i + j) << j;
-//		r.insert(r.begin(), HEX[t]);
-//	}
-//
-//	// Trim string
-//	if (r[0] == '0')
-//	{
-//		size_t del_mark = r.find_first_not_of('0');
-//		r.erase(0, (del_mark > r.size()) ? r.size() - 1 : del_mark);
-//	}
-//
-//	return r;
-//}
-
+// Chuyển bitset trong nội bộ QInt thành string số hệ 2/10/16
 string QInt::toString(uint8_t base)
 {
 	string r;

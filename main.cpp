@@ -95,6 +95,9 @@ int main(int argc, char** argv)
 
 		vector<string> tokens = tokenizer(command);
 		
+		// Xét số thành phần trong một command, tìm toán tử tương ứng,
+		// tính và ghi kết quả ra file
+
 		if (tokens.size() == 3)
 		{
 			cout << tokens[1] << endl;
