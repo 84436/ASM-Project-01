@@ -21,8 +21,10 @@ Nhóm gồm 2 thành viên (thuộc lớp `18CLC6`):
 | Công việc                           | Thành viên thực hiện |
 | ----------------------------------- | :------------------: |
 | Thiết lập đồ án (GitHub repo, v.v.) |      Văn Thiện       |
-| Test chương trình (hardcore)        |      Đình Toàn       |
+| Test và sửa lỗi chung*              |      Đình Toàn       |
 | Viết báo cáo                        | Đình Toàn, Văn Thiện |
+
+\* sau khi đồ án đã hoàn thiện giai đoạn đầu
 
 
 
@@ -35,12 +37,25 @@ Nhóm gồm 2 thành viên (thuộc lớp `18CLC6`):
 
 ### Ý tưởng thiết kế
 
--   <backstory đi tìm cách lưu trữ; thử mảng bool, 4 biến int32_t, v.v.>
--   <tìm ra `std::bitset`>
--   <mọi thứ sẽ xử lý trên hệ 2; hệ 10 hay 16 chỉ là cách biểu diễn và là nhiệm vụ của các hàm chuyển đổi>
--   <gì gì đó>
+-   Khi bắt đầu đồ án, nhóm đã gặp một số trở ngại trong việc tìm giải pháp lưu trữ:
 
--   Phạm vi biểu diễn của `QInt`: $-2^{127}$ tới $2^{127}-1$
+    -   C/C++ không hỗ trợ sẵn các kiểu primitive `int` có kích thước lớn hơn 64-bit.
+    -   Một số giải pháp như `__int128_t` trong GCC, hay `boost::integer` không có sẵn trong *mọi* môi trường lập trình C/C++ (và việc sử dụng những giải pháp này cũng không được cho phép trong phạm vị đồ án.)
+    -   Việc nhóm các biến dữ liệu nhỏ hơn (như 2 biến `int64_t`, 4 biến `int32_t` hay 8 biến `int16_t`) gây trở ngại trong vấn đề truy cập ngẫu nhiên, xử lý hàng loạt các bit và quá trình gỡ lỗi nói chung.
+    -   Mảng `bool[128]` là một lựa chọn khá tốt (có thể truy cập ngẫu nhiên từng bit) nhưng không tối ưu về mặt bộ nhớ (mỗi một số khi đó cần 128 bytes để lưu trữ.)
+
+    Tuy nhiên, sau một thời gian, nhóm cuối cùng đã tìm ra được giải pháp lưu trữ tối ưu:
+    **`std::bitset`, có sẵn trong thư viện chuẩn của C++**
+
+- `std::bitset` có thể được coi như một mảng các `bool`, nhưng…
+
+    -   mỗi phần tử được lưu trong 1 bit thay vì 1 byte (sử dụng bộ nhớ tối ưu)
+    -   có thể truy cập ngẫu nhiên các phần tử
+    -   có sẵn một số phép toán logic cơ bản (phần lớn có thể tận dụng được, ngoại trừ `operator>>` được nói sau trong phần **Chức năng**)
+
+-   Đối với việc xử lý các hệ cơ số khác nhau (cụ thể là 2/10/16), việc tính toán sẽ chỉ được thực hiện trên hệ 2; nói cách khác, hệ 10 và 16 chỉ là hai cách biểu diễn khác nhau của một số hệ 2, nên việc chuyển đổi và biểu diễn chỉ tập trung vào hệ $2 \leftrightarrow 10$ và $2 \leftrightarrow 16$.
+
+-   Phạm vi biểu diễn của `QInt` sử dụng `bitset` nói trên (trong hệ 10): $-2^{127}$ tới $2^{127}-1$
 
 
 
@@ -102,18 +117,20 @@ Kiểu primitive int lớn nhất có thể có trong C(++) là 64-bit, nên vi�
 -   được cài đặt dưới dạng tương tự mô hình singleton: bảng sẽ được lập ra và tính ngay trong lần đầu tiên một object `QInt` được khởi tạo, và sẽ tiếp tục tồn tại trong bộ nhớ cho đến khi kết thúc vòng đời chương trình (cách cài đặt này sẽ tiết kiệm được chi phí tính toán hơn việc tính $2^k$ riêng lẻ mỗi lần với $k$ bất kì);
 -   gồm 128 mảng, tương ứng với 128 giá trị $2^k$ cần tính;
 -   mỗi mảng gồm $\lceil \log_{10}(2^{128}) \rceil = 39$ phần tử, tương ứng với 39 chữ số (số chữ số của $2^{128}$), được ghi theo thứ tự trái-qua-phải (hàng đơn vị nằm ở đầu mảng);
--   có mảng đầu tiên chứa $2^0$, và các mảng tiếp theo sẽ bằng 2 lần giá trị từng phần tử của mảng trước đó; 
+-   có mảng đầu tiên chứa $2^0 = 1$, và các mảng tiếp theo sẽ bằng 2 lần giá trị từng phần tử của mảng trước đó; 
 -   mỗi phần tử trong mảng nếu trong quá trình nhân 2 lên có giá trị lớn hơn 9 sẽ được lấy phần dư cộng dồn qua phần tử kế tiếp.
 
 Khi đã có "bảng $2^k$", việc chuyển bitset thành số hệ 10 bây giờ chỉ còn là việc cộng dồn các giá trị $2^k$ với $k$ tương ứng các bit `1` (duyệt qua bitset từ bit thấp nhất lên), ghi ngược lại từng chữ số trong mảng thành một string, và loại bỏ đi các số 0 thừa ở đầu.
 
 
 
-**base2 $\leftarrow$ base10**
+##### base10 $\leftarrow$ base2
 
 |       ![10TO2](Report_images/10TO2.png)       |
 | :-------------------------------------------: |
 | Chuyển đổi cơ số (base10 $\rightarrow$ base2) |
+
+
 
 
 
@@ -123,11 +140,19 @@ Khi đã có "bảng $2^k$", việc chuyển bitset thành số hệ 10 bây gi�
 | :-------------------------------------------: | :-------------------------------------------: |
 | Chuyển đổi cơ số (base2 $\rightarrow$ base16) | Chuyển đổi cơ số (base16 $\rightarrow$ base2) |
 
-Mỗi 4 bit trong bitset sẽ tương ứng với 1 số trong hệ 16, nên việc chuyển đổi qua lại giữa 2 hệ này tương đối dễ dàng:
+Mỗi 4 bit trong bitset sẽ tương ứng với 1 số trong hệ 16, nên việc chuyển đổi qua lại giữa 2 hệ này tương đối dễ dàng. Một mảng hằng `HEX[]` được định nghĩa sẵn, gồm 16 chữ số thập lục phân sắp xếp từ `0` đến `F`, để hỗ trợ cho việc chuyển đổi.
+
+Đối với base2 $\rightarrow$ base16:
 
 -   Duyệt qua bitset từ bit thấp nhất lên, lấy từng nhóm 4 bit mỗi lần
--   Tính giá trị của 4 bit đó ở hệ 10, sau đó so sánh với một mảng gồm 16 chữ số thập lục phân được sắp xếp từ `0` đến `F` để lấy kí tự tương ứng
+-   Tính giá trị của 4 bit đó ở hệ 10, sau đó tra ngược trong `HEX` để lấy kí tự tương ứng
 -   Chèn kí tự đã lấy vào đầu string, và loại bỏ các số 0 thừa ở đầu một khi đã duyệt xong bitset.
+
+Đối với base16 $\rightarrow$ base2:
+
+-   Duyệt qua chuỗi số từ hàng đơn vị lên, lấy từng chữ số một ra
+-   Tra ngược chữ số đó trong `HEX` để lấy giá trị trong hệ 10 tương ứng, sau đó chia lấy dư với 2 4 lần liên tiếp.
+-   Ghi từng bit một vào bitset. Khi cần xuất ra string, loại bỏ các số 0 thừa ở đầu.
 
 
 
