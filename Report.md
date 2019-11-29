@@ -7,8 +7,8 @@ Khoa CNTT – CTĐA, Trường ĐH KHTN – ĐHQG TP.HCM
 
 Nhóm gồm 2 thành viên (thuộc lớp `18CLC6`):
 
--   `18127221`: Bùi Văn Thiện
--   `18127231`: Đoàn Đình Toàn
+-   `18127221`: Bùi Văn Thiện (GitHub: [@84436](https://github.com/84436))
+-   `18127231`: Đoàn Đình Toàn (GitHub: [@t3bol90](https://github.com/t3bol90))
 
 
 
@@ -132,8 +132,10 @@ Khi đã có "bảng $2^k$", việc chuyển bitset thành số hệ 10 bây gi�
 
 Về cơ bản, việc đọc từ base10 và chuyển sang base2 nếu theo logic bình thường thì cần hai method là chia cho hai sau đó kiểm tra tính chẵn lẻ của thương.
 
--   Cài đặt hàm chia cho hai đối với string, divByTwo() và hàm kiểm tra tính chẵn lẻ của một string, isOdd().
--   Với mỗi lần chia, ta rút trích được trạng thái bit hiện tại của số và lưu vào bitset của QInt.
+-   Cài đặt hàm chia cho hai đối với string, `divByTwo()` và hàm kiểm tra tính chẵn lẻ của một string, `isOdd()`.
+-   Với mỗi lần chia, ta rút trích được trạng thái bit hiện tại của số và lưu vào bitset của `QInt`.
+
+
 
 ##### base2 $\leftrightarrow$ base16
 
@@ -209,8 +211,8 @@ Việc xoay bit cơ bản là đánh dấu bit cao nhất (đối với `ror()`)
 Vì `operator>>` có sẵn trong `std::bitset` là phép shift phải logic nên cần phải xử lý thủ công việc điền các "lỗ trống" có được sau khi shift với bit cao nhất (MSB) thay vì bit `0` trước khi shift. Giải pháp được cài đặt:
 
 -   Tạo một bitset với các bit cao cần điền với MSB đã được đánh dấu. Gọi bitset này là mask.
--   Xem như đối tượng QInt cần shift là một vòng bit, kết quả trả về khi shift là cắt vòng bit này trong đoạn từ $QLEN - 1$ cho đến $k$, với $k$ là số bit cần shift.
--   Chép đè đoạn vừa cắt vào bitset vừa tạo, do khởi tạo giá trị vừa đúng với MSB nên ta có giữ được tính số học trong phép Shift.
+-   Xem đối tượng `QInt` cần shift là một vòng bit, kết quả trả về khi shift là cắt vòng bit này trong đoạn từ $QLEN - 1$ cho đến $k$, với $k$ là số bit cần shift.
+-   Chép đè đoạn vừa cắt vào bitset vừa tạo.
 
 
 
@@ -257,21 +259,24 @@ Bản chất phép trừ một số là phép cộng với bù 2 của số đó
 | :-----------------------------: |
 |         Phép nhân (`*`)         |
 
-Đầu tiên ta mặc định là nhân hai số dương, biến đổi các số thành số dương bằng hàm q_abs(). Sau đó đánh dấu trạng thái cùng dấu hay khác dấu của hai số.
-Ta chọn ra chuỗi bit nhỏ hơn làm multiplicand. Kết hợp phép shift và biến đếm, với mỗi bit của multiplicand - nếu bit đó là 1 thì shift số còn lại và cộng vào kết quả, không thì thôi.
+Đầu tiên ta mặc định là nhân hai số dương, biến đổi các số thành số dương bằng hàm `q_abs()`. Sau đó đánh dấu trạng thái cùng dấu hay khác dấu của hai số.
+Ta chọn ra chuỗi bit nhỏ hơn làm multiplicand. Kết hợp phép shift và biến đếm, với mỗi bit của multiplicand: nếu bit đó là 1 thì shift số còn lại và cộng vào kết quả.
 
 Kết quả trả về sẽ được thêm dấu nhờ vào đánh dấu đã gắn trước đó.
 
-| Trước khi quyết định thực hiện ý tưởng này, team đã mất 3 ngày để vật lộn với FFT để cài đặt một phép nhân nhanh hơn. Nhưng do FFT làm việc với số thực nên bị sai số nhỏ khi thực hiện phép nhân. Và cũng vì thế mà team chọn phương án an toàn hơn là dùng shift. Nếu như có thể tác động trực tiếp đến tầng thấp hơn thì thuật toán trên sẽ chạy nhanh hơn so với hiện tại rất nhiều.
+>   Trước khi quyết định thực hiện ý tưởng này, nhóm đã mất 3 ngày vật lộn với FFT để cài đặt một phép nhân nhanh hơn. Tuy nhiên, FFT làm việc với số thực nên bị sai số nhỏ khi thực hiện phép nhân, vì thế nhóm quay về phương án an toàn hơn là dùng shift. Nếu như có thể tác động trực tiếp đến tầng thấp hơn trong quá trình tính toán thì thuật toán FFT nói trễn trên sẽ chạy nhanh hơn rất nhiều so với cài đặt hiện tại.
+
+
 
 ##### `operator/` (Phép chia)
 
 | ![DIV](Report_images/DIV.png) |
 | :---------------------------: |
 |        Phép chia (`/`)        |
-Cũng như phép nhân, ta mặc định là nhân hai số dương, biến đổi các số thành số dương bằng hàm q_abs(). Sau đó đánh dấu trạng thái cùng dấu hay khác dấu của hai số.
+Tương tự như phép nhân, ta mặc định là nhân hai số dương, biến đổi các số thành số dương bằng hàm `q_abs()`. Sau đó đánh dấu trạng thái cùng dấu hay khác dấu của hai số.
 Kết hợp phép shift và phép trừ, ta thực hiện tuần tự sẽ ra được kết quả.
 
 Kết quả trả về sẽ được thêm dấu nhờ vào đánh dấu đã gắn trước đó.
 
-| Một lần nữa team lại định dùng Newton-Raphson để thực hiện phép chia, cải thiện độ phức tạp. Nhưng vấn đề lộ ra là thuật toán trên chỉ tính sấp xỉ nên team quyết định an toàn.
+>   Một lần nữa, nhóm dự định cài đặt một phép chia nhanh hơn, cụ thể là Newton-Raphson, để cải thiện thời gian thực thi. Tuy nhiên, vì thuật toán trên độ chính xác không cao (chỉ có thể tính xấp xỉ), nên nhóm đã quyết định quay về phương án an toàn.
+
