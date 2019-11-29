@@ -130,9 +130,10 @@ Khi đã có "bảng $2^k$", việc chuyển bitset thành số hệ 10 bây gi�
 | :-------------------------------------------: |
 | Chuyển đổi cơ số (base10 $\rightarrow$ base2) |
 
+Về cơ bản, việc đọc từ base10 và chuyển sang base2 nếu theo logic bình thường thì cần hai method là chia cho hai sau đó kiểm tra tính chẵn lẻ của thương.
 
-
-
+-   Cài đặt hàm chia cho hai đối với string, divByTwo() và hàm kiểm tra tính chẵn lẻ của một string, isOdd().
+-   Với mỗi lần chia, ta rút trích được trạng thái bit hiện tại của số và lưu vào bitset của QInt.
 
 ##### base2 $\leftrightarrow$ base16
 
@@ -157,6 +158,7 @@ Mỗi 4 bit trong bitset sẽ tương ứng với 1 số trong hệ 16, nên vi�
 
 
 ##### base10 $\leftrightarrow$ base16
+
 
 |      ![10TO16](Report_images/10TO16.png)       |      ![16TO10](Report_images/16TO10.png)       |
 | :--------------------------------------------: | :--------------------------------------------: |
@@ -207,8 +209,8 @@ Việc xoay bit cơ bản là đánh dấu bit cao nhất (đối với `ror()`)
 Vì `operator>>` có sẵn trong `std::bitset` là phép shift phải logic nên cần phải xử lý thủ công việc điền các "lỗ trống" có được sau khi shift với bit cao nhất (MSB) thay vì bit `0` trước khi shift. Giải pháp được cài đặt:
 
 -   Tạo một bitset với các bit cao cần điền với MSB đã được đánh dấu. Gọi bitset này là mask.
--   Shift phải bitset hiện tại với `operator>>` có sẵn trong `std::bitset`.
--   OR mask với bitset hiện tại, và trả về kết quả.
+-   Xem như đối tượng QInt cần shift là một vòng bit, kết quả trả về khi shift là cắt vòng bit này trong đoạn từ $QLEN - 1$ cho đến $k$, với $k$ là số bit cần shift.
+-   Chép đè đoạn vừa cắt vào bitset vừa tạo, do khởi tạo giá trị vừa đúng với MSB nên ta có giữ được tính số học trong phép Shift.
 
 
 
@@ -255,11 +257,21 @@ Bản chất phép trừ một số là phép cộng với bù 2 của số đó
 | :-----------------------------: |
 |         Phép nhân (`*`)         |
 
+Đầu tiên ta mặc định là nhân hai số dương, biến đổi các số thành số dương bằng hàm q_abs(). Sau đó đánh dấu trạng thái cùng dấu hay khác dấu của hai số.
+Ta chọn ra chuỗi bit nhỏ hơn làm multiplicand. Kết hợp phép shift và biến đếm, với mỗi bit của multiplicand - nếu bit đó là 1 thì shift số còn lại và cộng vào kết quả, không thì thôi.
 
+Kết quả trả về sẽ được thêm dấu nhờ vào đánh dấu đã gắn trước đó.
+
+| Trước khi quyết định thực hiện ý tưởng này, team đã mất 3 ngày để vật lộn với FFT để cài đặt một phép nhân nhanh hơn. Nhưng do FFT làm việc với số thực nên bị sai số nhỏ khi thực hiện phép nhân. Và cũng vì thế mà team chọn phương án an toàn hơn là dùng shift. Nếu như có thể tác động trực tiếp đến tầng thấp hơn thì thuật toán trên sẽ chạy nhanh hơn so với hiện tại rất nhiều.
 
 ##### `operator/` (Phép chia)
 
 | ![DIV](Report_images/DIV.png) |
 | :---------------------------: |
 |        Phép chia (`/`)        |
+Cũng như phép nhân, ta mặc định là nhân hai số dương, biến đổi các số thành số dương bằng hàm q_abs(). Sau đó đánh dấu trạng thái cùng dấu hay khác dấu của hai số.
+Kết hợp phép shift và phép trừ, ta thực hiện tuần tự sẽ ra được kết quả.
 
+Kết quả trả về sẽ được thêm dấu nhờ vào đánh dấu đã gắn trước đó.
+
+| Một lần nữa team lại định dùng Newton-Raphson để thực hiện phép chia, cải thiện độ phức tạp. Nhưng vấn đề lộ ra là thuật toán trên chỉ tính sấp xỉ nên team quyết định an toàn.
