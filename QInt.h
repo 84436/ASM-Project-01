@@ -10,7 +10,7 @@
 #include <stack>
 using namespace std;
 
-constexpr auto QLEN = 128;					// độ dài QInt = 128 bit ._.
+constexpr auto QLEN = 128;					// độ dài QInt = 128 bit
 constexpr auto DLEN = 39;					// ceil(log10(2^128))
 constexpr char HEX[] = "0123456789ABCDEF";
 
@@ -25,7 +25,6 @@ class QInt
 		
 	public:
 		QInt() { Pow2Table_Generate(); }
-		// TODO: nhập 2 cái dưới lại
 		QInt(uint8_t base, string data);	// từ string base2/base16
 		QInt(const bitset<QLEN> p_value);	// từ bitset
 		QInt(const QInt& x);                // copy
@@ -49,10 +48,6 @@ class QInt
 		QInt operator>> (const int8_t& x);
 		QInt rol		() const;
 		QInt ror		() const;
-		
-		/*string toB2();
-		string toB10();
-		string toB16();*/
 
 		string toString(uint8_t base);
 };
