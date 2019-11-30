@@ -278,5 +278,16 @@ Kết hợp phép shift và phép trừ, ta thực hiện tuần tự sẽ ra đ
 
 Kết quả trả về sẽ được thêm dấu nhờ vào đánh dấu đã gắn trước đó.
 
->   Một lần nữa, nhóm dự định cài đặt một phép chia nhanh hơn, cụ thể là Newton-Raphson, để cải thiện thời gian thực thi. Tuy nhiên, vì thuật toán trên độ chính xác không cao (chỉ có thể tính xấp xỉ), nên nhóm đã quyết định quay về phương án an toàn.
+>   Một lần nữa, nhóm dự định cài đặt một phép chia nhanh hơn, cụ thể là Newton-Raphson, để cải thiện thời gian thực thi. Tuy nhiên, vì thuật toán trên độ chính xác không cao (chỉ có thể tính xấp xỉ), nên nhóm đã quyết định quay về phương án an toàn. 
+
+
+
+
+
+### Lời cảm ơn
+Để hoàn thiện được đồ án này, không thể nhắc tới sự hướng dẫn từ những thầy cô ở HCMUS. Gửi lời cảm ơn chân thành đến thầy Lê Quốc Hòa - giảng viên phụ trách bộ môn Kiến Trúc Máy Tính và Hợp Ngữ, cô Chung Thùy Linh - giảng viên hướng dẫn thực hành và là người trực tiếp hướng dẫn đồ án.
+
+Một lời cảm ơn nữa đến những người đồng đội đã cùng nhau thực hiện và hoàn thiện đồ án này cho tới thời điểm cuối cùng.
+
+> Chúc mọi người có nhiều sức khỏe và thành công trong công việc.
 
